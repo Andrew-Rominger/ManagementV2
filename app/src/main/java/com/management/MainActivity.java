@@ -2,6 +2,7 @@ package com.management;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
@@ -17,9 +18,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+
+import com.management.Activities.AddTask;
 import com.management.Adapter.MenuAdapter;
 import com.management.BaseClasses.MenuItem;
 import com.management.Fragments.HomeFragment;
+import com.management.Fragments.TaskFragment;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -31,6 +35,7 @@ public class MainActivity extends AppCompatActivity
     String TAG = MainActivity.class.getSimpleName();
     FrameLayout contentHolder;
 
+
     FragmentManager fm;
     FragmentTransaction transaction;
 
@@ -41,6 +46,20 @@ public class MainActivity extends AppCompatActivity
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.action_bar_menu, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(android.view.MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case R.id.addTask:
+                startActivityForResult(new Intent(this, AddTask.class),0);
+                break;
+            case R.id.settings:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -78,8 +97,7 @@ public class MainActivity extends AppCompatActivity
             }
 
         };
-        bar.setDisplayHomeAsUpEnabled(true);
-        bar.setHomeButtonEnabled(true);
+
     }
 
 
@@ -101,6 +119,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Log.i(TAG,"Item " + position + " clicked");
+            drawerLayout.closeDrawers();
             switch (position)
             {
                 case 0:
@@ -119,7 +138,7 @@ public class MainActivity extends AppCompatActivity
                     moveToSettings();
                     break;
             }
-            drawerLayout.closeDrawers();
+
         }
     }
 
@@ -130,6 +149,9 @@ public class MainActivity extends AppCompatActivity
 
     private void moveToTasks()
     {
+        transaction = fm.beginTransaction();
+        transaction.replace(R.id.contentHolder, new TaskFragment());
+        transaction.commit();
 
     }
 

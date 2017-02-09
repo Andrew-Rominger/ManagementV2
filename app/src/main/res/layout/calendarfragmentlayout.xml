@@ -3,10 +3,24 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <com.management.Views.CalenderView
-        android:id="@+id/fragmentCV"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </com.management.Views.CalenderView>
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.management.Views.CalenderView
+            android:id="@+id/fragmentCV"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </com.management.Views.CalenderView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Put Schedule For Selected Day Here"
+            android:gravity="center"/>
+
+
+    </LinearLayout>
+
 
 </FrameLayout>

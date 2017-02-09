@@ -2,6 +2,8 @@ package com.management.BaseClasses;
 
 import android.graphics.Color;
 
+import java.util.Calendar;
+
 /**
  * Created by Andrew on 2/8/2017.
  */
@@ -16,6 +18,33 @@ public class Task
     private Color color;
     private boolean isComplete;
     private String description;
+    private Calendar startTime;
+    private Calendar endTime;
+    private int urgency;
+
+    public int getUrgency() {
+        return urgency;
+    }
+
+    public void setUrgency(int urgency) {
+        this.urgency = urgency;
+    }
+
+    public Calendar getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Calendar startTime) {
+        this.startTime = startTime;
+    }
+
+    public Calendar getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Calendar endTime) {
+        this.endTime = endTime;
+    }
 
     public String getTitle() {
         return title;
