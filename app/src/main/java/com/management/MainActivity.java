@@ -1,5 +1,7 @@
 package com.management;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.res.Configuration;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
@@ -13,18 +15,26 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import com.management.Adapter.MenuAdapter;
 import com.management.BaseClasses.MenuItem;
+import com.management.Fragments.HomeFragment;
 
-public class HomeScreen extends AppCompatActivity
+public class MainActivity extends AppCompatActivity
 {
     Toolbar toolbar;
     DrawerLayout drawerLayout;
     ActionBarDrawerToggle actionBarDrawerToggle;
     ListView navList;
     MenuAdapter menuAdapter;
-    String TAG = HomeScreen.class.getSimpleName();
+    String TAG = MainActivity.class.getSimpleName();
+    FrameLayout contentHolder;
+
+    FragmentManager fm;
+    FragmentTransaction transaction;
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -49,6 +59,11 @@ public class HomeScreen extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         ActionBar bar = getSupportActionBar();
+
+        fm = getFragmentManager();
+        transaction = fm.beginTransaction();
+        transaction.replace(R.id.contentHolder, new HomeFragment(), "homeFragment");
+        transaction.commit();
 
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_nav, R.string.close_nav)
         {
@@ -80,12 +95,63 @@ public class HomeScreen extends AppCompatActivity
         actionBarDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    private class DrawerItemClickListener implements android.widget.AdapterView.OnItemClickListener {
+    private class DrawerItemClickListener implements android.widget.AdapterView.OnItemClickListener
+    {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Log.i(TAG,"Item " + position + " clicked");
+            switch (position)
+            {
+                case 0:
+                    moveToHome();
+                    break;
+                case 1:
+                    moveToCalendar();
+                    break;
+                case 2:
+                    moveToSchedule();
+                    break;
+                case 3:
+                    moveToTasks();
+                    break;
+                case 4:
+                    moveToSettings();
+                    break;
+            }
             drawerLayout.closeDrawers();
         }
+    }
+
+    private void moveToSettings()
+    {
+
+    }
+
+    private void moveToTasks()
+    {
+
+    }
+
+    private void moveToSchedule()
+    {
+
+    }
+
+    private void moveToCalendar()
+    {
+        transaction = fm.beginTransaction();
+        transaction.replace(R.id.contentHolder, new calendarFragment());
+        //transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    private void moveToHome()
+    {
+        transaction = fm.beginTransaction();
+        HomeFragment homeFragment =  new HomeFragment();
+        transaction.replace(R.id.contentHolder,homeFragment);
+        //transaction.addToBackStack(null);
+        transaction.commit();
     }
 }
