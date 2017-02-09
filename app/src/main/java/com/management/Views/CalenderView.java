@@ -1,8 +1,10 @@
 package com.management.Views;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -118,18 +120,6 @@ public class CalenderView extends LinearLayout
                 Calendar c = (Calendar) adapterView.getItemAtPosition(i);
                 Calendar c2 = Calendar.getInstance();
                 Log.i(TAG, "Clicked on " + sdf2.format(c.getTime()) + " at position " + i);
-                if((c.get(Calendar.MONTH) == c2.get(Calendar.MONTH)) && (c.get(Calendar.YEAR) == c2.get(Calendar.YEAR)) && (c.get(Calendar.DAY_OF_MONTH)==c2.get(Calendar.DAY_OF_MONTH)))
-                {
-                    TextView d = (TextView) view.findViewById(R.id.dayOfMonthNum);
-                    d.setTextColor(Color.BLACK);
-                    isSwitched = true;
-                }
-                else if(isSwitched)
-                {
-                    TextView f = (TextView) prevSelectedView.findViewById(R.id.dayOfMonthNum);
-                    f.setTextColor(highlightColor);
-                    isSwitched = false;
-                }
                 highlightSelection(view);
 
                 prevSelectedDay = c.get(Calendar.DAY_OF_MONTH);
@@ -142,26 +132,29 @@ public class CalenderView extends LinearLayout
 
     private void highlightSelection(View view)
     {
-        view.setBackgroundColor(highlightColor);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            view.setBackground(ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.circle_primaryfill, null));
+        }
         if(prevSelectedView == null)
         {
             prevSelectedView = view;
             return;
         }
+
         if(prevSelectedDay <= 13 && prevSelectedPosition >= 28)
         {
             //Log.d(TAG, "Prev day: " + prevSelectedDay + ", Position: " + prevSelectedPosition + ", highlighting grey");
-            prevSelectedView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorGreyLight));
+            prevSelectedView.setBackground(ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.circle, null));
         }
         else if(prevSelectedDay >= 26 && prevSelectedPosition <= 5)
         {
             //Log.d(TAG, "Prev day: " + prevSelectedDay + ", Position: " + prevSelectedPosition + ", highlighting grey");
-            prevSelectedView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorGreyLight));
+            prevSelectedView.setBackground(ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.circle, null));
         }
         else
         {
             //Log.d(TAG, "Prev day: " + prevSelectedDay + ", Position: " + prevSelectedPosition + ", highlighting white");
-            prevSelectedView.setBackgroundColor(Color.WHITE);
+            prevSelectedView.setBackground(ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.circle, null));
         }
         prevSelectedView = view;
     }
@@ -177,20 +170,7 @@ public class CalenderView extends LinearLayout
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
             {
                 Calendar c = (Calendar) adapterView.getItemAtPosition(i);
-                Calendar c2 = Calendar.getInstance();
                 Log.i(TAG, "Clicked on " + sdf2.format(c.getTime()) + " at position " + i);
-                if((c.get(Calendar.MONTH) == c2.get(Calendar.MONTH)) && (c.get(Calendar.YEAR) == c2.get(Calendar.YEAR)) && (c.get(Calendar.DAY_OF_MONTH)==c2.get(Calendar.DAY_OF_MONTH)))
-                {
-                    TextView d = (TextView) view.findViewById(R.id.dayOfMonthNum);
-                    d.setTextColor(Color.BLACK);
-                    isSwitched = true;
-                }
-                else if(isSwitched)
-                {
-                    TextView f = (TextView) prevSelectedView.findViewById(R.id.dayOfMonthNum);
-                    f.setTextColor(highlightColor);
-                    isSwitched = false;
-                }
                 highlightSelection(view);
                 prevSelectedDay = c.get(Calendar.DAY_OF_MONTH);
                 prevSelectedPosition = i;
@@ -202,7 +182,7 @@ public class CalenderView extends LinearLayout
         Log.d(TAG, "Is selected day shown: " + isSelShown);
         if(isSelShown)
         {
-            prevSelectedView.setBackgroundColor(highlightColor);
+            prevSelectedView.setBackground(ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.circle_primaryfill, null));
         }
         animateoutLeft();
     }
@@ -220,18 +200,6 @@ public class CalenderView extends LinearLayout
                 Calendar c = (Calendar) adapterView.getItemAtPosition(i);
                 Calendar c2 = Calendar.getInstance();
                 Log.i(TAG, "Clicked on " + sdf2.format(c.getTime()) + " at position " + i);
-                if((c.get(Calendar.MONTH) == c2.get(Calendar.MONTH)) && (c.get(Calendar.YEAR) == c2.get(Calendar.YEAR)) && (c.get(Calendar.DAY_OF_MONTH)==c2.get(Calendar.DAY_OF_MONTH)))
-                {
-                    TextView d = (TextView) view.findViewById(R.id.dayOfMonthNum);
-                    d.setTextColor(Color.BLACK);
-                    isSwitched = true;
-                }
-                else if(isSwitched)
-                {
-                    TextView f = (TextView) prevSelectedView.findViewById(R.id.dayOfMonthNum);
-                    f.setTextColor(highlightColor);
-                    isSwitched = false;
-                }
                 highlightSelection(view);
                 prevSelectedDay = c.get(Calendar.DAY_OF_MONTH);
                 prevSelectedPosition = i;
@@ -243,7 +211,7 @@ public class CalenderView extends LinearLayout
         Log.d(TAG, "Is selected day shown: " + isSelShown);
         if(isSelShown)
         {
-            prevSelectedView.setBackgroundColor(highlightColor);
+            prevSelectedView.setBackground(ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.circle_primaryfill, null));
         }
         animateOutRight();
     }
@@ -351,11 +319,11 @@ public class CalenderView extends LinearLayout
                 dateView.setTextColor(Color.BLACK);
                 if(position <= 5 && c.get(Calendar.DAY_OF_MONTH) >= 23)
                 {
-                    lin.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorGreyLight));
+                    dateView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorGreyLight));
                 }
                 if(position >= 29 && c.get(Calendar.DAY_OF_MONTH) <= 14)
                 {
-                    lin.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorGreyLight));
+                    dateView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorGreyLight));
                 }
                 if(nowb)
                 {
@@ -364,12 +332,10 @@ public class CalenderView extends LinearLayout
                 if((selectedDay.get(Calendar.MONTH) == c.get(Calendar.MONTH)) && (selectedDay.get(Calendar.YEAR) == c.get(Calendar.YEAR)) && (selectedDay.get(Calendar.DAY_OF_MONTH)==c.get(Calendar.DAY_OF_MONTH)))
                 {
                     if(changeColor) {
-                        lin.setBackgroundColor(highlightColor);
-                        dateView.setTextColor(Color.BLACK);
+                        lin.setBackground(ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.circle_primaryfill, null));
                     }
                     else {changeColor = true;}
                 }
-
                 return  convertView;
 
 
