@@ -1,7 +1,6 @@
 package com.management.Views;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Build;
@@ -26,11 +25,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.management.R;
-import com.management.BaseClasses.Task;
 import com.management.Utilities;
 
-
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
