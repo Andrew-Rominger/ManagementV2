@@ -21,6 +21,7 @@ import java.util.Calendar;
 public class Utilities
 {
     public static SimpleDateFormat MonthDayYearsdf = new SimpleDateFormat("MMM d, yyyy");
+    public static SimpleDateFormat monthAndYear = new SimpleDateFormat("MMM, yyyy");
     public static SimpleDateFormat fullDateWithTime = new SimpleDateFormat("MMM d, yyyy @ h:mm aa");
     public static SimpleDateFormat justTime = new SimpleDateFormat("h:mm aa");
     public static ArrayList<Calendar> getDays(Context context, Calendar calendar)
