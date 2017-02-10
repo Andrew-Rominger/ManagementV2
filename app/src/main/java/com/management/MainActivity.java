@@ -154,10 +154,13 @@ public class MainActivity extends AppCompatActivity
         transaction.commit();
 
     }
-
+    //method that changes the current fragment to the schedule fragment
+    //called at case 2
     private void moveToSchedule()
     {
-
+        transaction = fm.beginTransaction();
+        transaction.replace(R.id.contentHolder, new scheduleFragment());
+        transaction.commit();
     }
 
     private void moveToCalendar()
