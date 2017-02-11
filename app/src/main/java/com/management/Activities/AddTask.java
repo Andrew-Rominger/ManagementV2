@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -35,6 +36,15 @@ public class AddTask extends AppCompatActivity
     private LinearLayout endTimeSelector;
 
     private FrameLayout startSelectorFragment;
+    EditText title;
+    EditText description;
+    EditText startDate;
+    EditText endDate;
+    EditText startTime;
+    EditText endTime;
+    int color;
+
+
 
     boolean isStartOpen;
 
@@ -54,6 +64,12 @@ public class AddTask extends AppCompatActivity
         startTimeSelector = (LinearLayout) findViewById(R.id.taskAddStartDateFrame);
         endTimeSelector = (LinearLayout) findViewById(R.id.taskAddEndDateFrame);
         startSelectorFragment = (FrameLayout) findViewById(R.id.startSelectorHolder);
+        title = (EditText) findViewById(R.id.taskAddTitle);
+        description = (EditText) findViewById(R.id.taskAddDescription);
+        startDate = (EditText) findViewById(R.id.startDateTask);
+        endDate = (EditText) findViewById(R.id.endDateTask);
+        startTime = (EditText) findViewById(R.id.startTimeTask);
+        endTime = (EditText) findViewById(R.id.endTimeTask);
         isStartOpen = false;
 
         startTimeSelector.setOnClickListener(new View.OnClickListener() {
