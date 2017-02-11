@@ -15,6 +15,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -101,11 +103,25 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
         switch (item.getItemId())
         {
             case R.id.action_save:
+                makeTask();
                 return true;
 
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void makeTask()
+    {
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.add_task_save, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
