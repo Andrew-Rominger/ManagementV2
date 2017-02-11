@@ -1,6 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="72dp"
+    android:weightSum="10">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:id="@+id/minusLL">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="24dp"
+            android:layout_above="@+id/minusTime"
+            android:id="@+id/minusImageView"
+            android:src="@drawable/minus" />
+
+        <TextView
+            android:text="6am"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/minusTime"
+            android:textAlignment="center" />
+
+    </LinearLayout>
+
+    <SeekBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekBar"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/minusTime"
+        android:layout_weight="8"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:id="@+id/plusLL">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="24dp"
+            android:layout_above="@+id/plusTime"
+            android:id="@+id/plusImageView"
+            android:src="@drawable/plus"
+            />
+
+        <TextView
+            android:text="7am"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/plusTime"
+            android:textAlignment="center" />
+
+    </LinearLayout>
 
 </LinearLayout>
