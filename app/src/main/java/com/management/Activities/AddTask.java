@@ -1,52 +1,60 @@
 package com.management.Activities;
 
 
-import android.graphics.Color;
+
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.management.Fragments.calendarFragment;
 import com.management.R;
-import com.management.Views.CalenderView;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 public class AddTask extends AppCompatActivity
 {
     private static final String TAG = AddTask.class.getSimpleName();
     public static SimpleDateFormat justTime = new SimpleDateFormat("h:mm aa");
 
-    private LinearLayout startTimeSelector;
+    FragmentManager fragmentManger;
+
+    private LinearLayout startDateSelector;
     private LinearLayout endTimeSelector;
 
     private FrameLayout startSelectorFragment;
-    EditText title;
-    EditText description;
-    EditText startDate;
-    EditText endDate;
-    EditText startTime;
-    EditText endTime;
+
+    Fragment currentShownStart;
+
+    TextView title;
+    TextView description;
+    TextView startDate;
+    TextView endDate;
+    TextView startTime;
+    TextView endTime;
     int color;
 
+    View startDateLine;
+    View startTimeLine;
+    View endDateLine;
+    View endTimeLine;
 
+    Toolbar toolbar;
 
-    boolean isStartOpen;
+    boolean isStartDateOpen = false;
+    boolean isStartTimeOpen = false;
+
+    boolean isEndDateOpen = false;
+    boolean isEndTimeOpen = false;
 
 
 
@@ -54,54 +62,80 @@ public class AddTask extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_task);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.addTaskToolbar);
+        toolbar = (Toolbar) findViewById(R.id.addTaskToolbar);
         setSupportActionBar(toolbar);
         ActionBar bar = getSupportActionBar();
         assert bar != null;
         bar.setDisplayHomeAsUpEnabled(true);
         bar.setHomeButtonEnabled(true);
 
-        startTimeSelector = (LinearLayout) findViewById(R.id.taskAddStartDateFrame);
+        startDateSelector = (LinearLayout) findViewById(R.id.taskAddStartDateFrame);
         endTimeSelector = (LinearLayout) findViewById(R.id.taskAddEndDateFrame);
         startSelectorFragment = (FrameLayout) findViewById(R.id.startSelectorHolder);
         title = (EditText) findViewById(R.id.taskAddTitle);
         description = (EditText) findViewById(R.id.taskAddDescription);
-        startDate = (EditText) findViewById(R.id.startDateTask);
-        endDate = (EditText) findViewById(R.id.endDateTask);
-        startTime = (EditText) findViewById(R.id.startTimeTask);
-        endTime = (EditText) findViewById(R.id.endTimeTask);
-        isStartOpen = false;
+        startDate = (TextView) findViewById(R.id.startDateTask);
+        endDate = (TextView) findViewById(R.id.endDateTask);
+        startTime = (TextView) findViewById(R.id.startTimeTask);
+        endTime = (TextView) findViewById(R.id.endTimeTask);
+        fragmentManger = getSupportFragmentManager();
+        startDateLine = findViewById(R.id.startDateLine);
+        endDateLine = findViewById(R.id.endDateLine);
 
-        startTimeSelector.setOnClickListener(new View.OnClickListener() {
+        startDateSelector.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
-                startAnimateOpen(new com.management.Fragments.calendarFragment());
-                isStartOpen = true;
+                if(isStartDateOpen) {
+                    startAnimateClose();
+                    startDateLine.setVisibility(View.VISIBLE);
+                    isStartDateOpen = false;
+                }else
+                {
+                    currentShownStart = new calendarFragment();
+                    startAnimateOpen(currentShownStart);
+                    startDateLine.setVisibility(View.INVISIBLE);
+                    isStartDateOpen = true;
+                }
             }
         });
 
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
         switch (item.getItemId())
         {
-            case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
+            case R.id.action_save:
+                createTask();
                 return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
         }
-        return super.onOptionsItemSelected(item);
     }
+
+    private void createTask()
+    {
+
+    }
+
 
     private void startAnimateOpen(Fragment toInflate)
     {
-
+        FragmentTransaction fragmentTransaction = fragmentManger.beginTransaction();
+        fragmentTransaction.replace(R.id.startSelectorHolder, toInflate);
+        fragmentTransaction.addToBackStack("addStartFragment");
+        fragmentTransaction.commit();
     }
 
     private void startAnimateClose()
     {
-
+        FragmentTransaction fragmentTransaction = fragmentManger.beginTransaction();
+        fragmentTransaction.remove(currentShownStart);
+        fragmentTransaction.commit();
     }
 }

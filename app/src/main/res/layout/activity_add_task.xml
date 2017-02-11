@@ -6,6 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     xmlns:tools="http://schemas.android.com/tools">
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/addTaskToolbar"
         android:layout_width="match_parent"
@@ -17,10 +18,7 @@
 
     <ScrollView
         android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools">
+        android:layout_width="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -108,7 +106,6 @@
                         android:gravity="center_vertical"
                         android:hint="Start Date"
                         android:background="@android:color/white"
-                        android:layout_weight=".5"
                         android:id="@+id/startDateTask" />
                 </LinearLayout>
                 <View
@@ -130,9 +127,9 @@
                         android:layout_gravity="center_vertical"
                         android:src="@drawable/clock_start"
                         />
-                    <EditText
+                    <TextView
                         android:layout_width="wrap_content"
-                        android:layout_weight=".5"
+                        android:gravity="center_vertical"
                         android:background="@android:color/white"
                         android:layout_height="match_parent"
                         android:hint="Start Time"
@@ -142,18 +139,21 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="1">
                 <View
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="1dp"
                     android:background="@color/colorGreyLight"
+                    android:id="@+id/startDateLine"
                     android:layout_weight=".5"
                     />
                 <View
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="1dp"
                     android:background="@color/colorGreyLight"
                     android:layout_weight=".5"
+                    android:id="@+id/endDateLine"
                     />
             </LinearLayout>
             <FrameLayout
@@ -178,7 +178,7 @@
                         android:src="@drawable/calendar_check"
                         />
 
-                    <EditText
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
@@ -205,10 +205,11 @@
                         android:src="@drawable/clock_end"
                         />
 
-                    <EditText
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:hint="End Time"
+                        android:gravity="center_vertical"
                         android:background="@android:color/white"
                         android:layout_weight=".5"
                         android:id="@+id/endTimeTask" />
@@ -232,10 +233,11 @@
                     android:src="@drawable/brush"
                     />
 
-                <EditText
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:background="@android:color/white"
+                    android:gravity="center_vertical"
                     android:hint="Change Color"
                     android:id="@+id/editText2" />
             </LinearLayout>

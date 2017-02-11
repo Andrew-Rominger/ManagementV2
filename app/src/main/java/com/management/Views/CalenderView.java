@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import com.management.R;
 import com.management.Utilities;
+import com.management.interfaces.FragmentDataPasser;
 
 
 import java.text.SimpleDateFormat;
@@ -260,6 +261,7 @@ public class CalenderView extends LinearLayout
 
         }, anim.getDuration());
     }
+
     public class calendarAdapter extends ArrayAdapter<Calendar>
     {
         ArrayList<Calendar> days;
