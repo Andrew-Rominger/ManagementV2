@@ -90,7 +90,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight=".5"
                     android:orientation="horizontal"
-                    android:id="@+id/taskAddStartDateFrame">
+                    android:id="@+id/StartDateTouchTarget">
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_marginLeft="16dp"
@@ -117,7 +117,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight=".5"
-                    android:id="@+id/taskAddEndDateFrame">
+                    android:id="@+id/StartTimeTouchTarget">
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
@@ -145,7 +145,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="1dp"
                     android:background="@color/colorGreyLight"
-                    android:id="@+id/startDateLine"
+                    android:id="@+id/StartDateUnderbar"
                     android:layout_weight=".5"
                     />
                 <View
@@ -153,13 +153,13 @@
                     android:layout_height="1dp"
                     android:background="@color/colorGreyLight"
                     android:layout_weight=".5"
-                    android:id="@+id/startTimeView"
+                    android:id="@+id/StartTimeUnderbar"
                     />
             </LinearLayout>
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/startSelectorHolder"/>
+                android:id="@+id/StartFragmentHolder"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -169,7 +169,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight=".5"
-                    android:id="@+id/endDateSelector">
+                    android:id="@+id/EndDateTouchTarget">
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_marginLeft="16dp"
@@ -196,7 +196,8 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_weight=".5">
+                    android:layout_weight=".5"
+                    android:id="@+id/EndTimeTouchTarget">
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
@@ -227,19 +228,19 @@
                     android:layout_width="189dp"
                     android:layout_height="1dp"
                     android:background="@color/colorGreyLight"
-                    android:id="@+id/endDateLine"
+                    android:id="@+id/EndDateUnderbar"
                     android:layout_weight=".5"/>
                 <View
                     android:layout_width="189dp"
                     android:layout_height="1dp"
                     android:background="@color/colorGreyLight"
-                    android:id="@+id/endTimeLine"
+                    android:id="@+id/EndTimeUnderbar"
                     android:layout_weight=".5"/>
             </LinearLayout>
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/endSelectorHolder"/>
+                android:id="@+id/EndFragmentHolder"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

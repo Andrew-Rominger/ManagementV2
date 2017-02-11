@@ -2,13 +2,13 @@ package com.management.Activities;
 
 
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,7 +17,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.management.Fragments.TimeSelectFragment;
+import com.management.Fragments.TimeSelectorFragment;
 import com.management.Fragments.calendarFragment;
 import com.management.R;
 import com.management.Utilities;
@@ -67,8 +67,28 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
 
     boolean isEndDateOpen = false;
     boolean isEndTimeOpen = false;
+    @Override
+    public void passData(Calendar calendar)
+    {
+        Log.d(TAG, "Activity got calendar");
+        startDate.setText(Utilities.MonthDayYearsdf.format(calendar.getTime()));
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case R.id.action_save:
+                return true;
 
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,120 +109,44 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
         description = (EditText) findViewById(R.id.taskAddDescription);
         startDate = (TextView) findViewById(R.id.startDateTask);
         endDate = (TextView) findViewById(R.id.endDateTask);
+        endTimeSelector = (LinearLayout) findViewById(R.id.endTimeSelector);
         startTime = (TextView) findViewById(R.id.startTimeTask);
         endTime = (TextView) findViewById(R.id.endTimeTask);
-        fragmentManger = getSupportFragmentManager();
+        fragmentManger = getFragmentManager();
         startDateLine = findViewById(R.id.startDateLine);
         endDateLine = findViewById(R.id.endDateLine);
         startTimeLine = findViewById(R.id.startTimeView);
+        endTimeLine = findViewById(R.id.endTimeLine);
+
 
         startDateSelector.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
-                if(isStartDateOpen) {
-                    startAnimateClose();
-                    startDateLine.setVisibility(View.VISIBLE);
-                    isStartDateOpen = false;
-                }else
-                {
-                    currentShownStart = new calendarFragment();
-                    startAnimateOpen(currentShownStart, startDateSelector);
-                    startDateLine.setVisibility(View.INVISIBLE);
-                    isStartDateOpen = true;
-                }
+
             }
         });
         endDateSelector.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                if(isEndDateOpen)
-                {
-                    startAnimateClose();
-                    endDateLine.setVisibility(View.VISIBLE);
-                    isEndDateOpen = false;
-                }
-                else
-                {
-                    currentShownStart = new calendarFragment();
-                    startAnimateOpen(currentShownStart, endDateSelector);
-                    endDateLine.setVisibility(View.INVISIBLE);
-                    isEndDateOpen = true;
-                }
+            public void onClick(View v)
+            {
+
+            }
+        });
+        endTimeSelector.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+
             }
         });
         startTimeSelector.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                if(isStartTimeOpen)
-                {
-                    startAnimateClose();
-                    startTimeLine.setVisibility(View.VISIBLE);
-                    isStartTimeOpen = false;
-                }
-                else
-                {
-                    currentShownStart = new TimeSelectFragment();
-                    startAnimateOpen(currentShownStart, startTimeSelector);
-                    startTimeLine.setVisibility(View.INVISIBLE);
-                    isEndTimeOpen = true;
-                }
+            public void onClick(View v)
+            {
+
             }
         });
-
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch (item.getItemId())
-        {
-            case R.id.action_save:
-                createTask();
-                return true;
-
-            default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
-                return super.onOptionsItemSelected(item);
-
-        }
     }
 
-    private void createTask()
-    {
-
-    }
-
-
-    private void startAnimateOpen(Fragment toInflate, LinearLayout l)
-    {
-        if(l == startDateSelector || l == startTimeSelector) {
-            FragmentTransaction fragmentTransaction = fragmentManger.beginTransaction();
-            fragmentTransaction.replace(R.id.startSelectorHolder, toInflate, "startDateFragment");
-            fragmentTransaction.addToBackStack("addStartFragment");
-            fragmentTransaction.commit();
-        }
-        else
-        {
-            FragmentTransaction fragmentTransaction = fragmentManger.beginTransaction();
-            fragmentTransaction.replace(R.id.endSelectorHolder, toInflate);
-            fragmentTransaction.addToBackStack("addStartFragment");
-            fragmentTransaction.commit();
-        }
-    }
-
-    private void startAnimateClose()
-    {
-
-            FragmentTransaction fragmentTransaction = fragmentManger.beginTransaction();
-            fragmentTransaction.remove(currentShownStart);
-            fragmentTransaction.commit();
-
-    }
-    @Override
-    public void passData(Calendar calendar)
-    {
-        Log.d(TAG, "Activity got calendar");
-        startDate.setText(Utilities.MonthDayYearsdf.format(calendar.getTime()));
-    }
 }

@@ -1,9 +1,9 @@
 package com.management;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -23,6 +23,7 @@ import com.management.BaseClasses.MenuItem;
 import com.management.Fragments.HomeFragment;
 import com.management.Fragments.TaskFragment;
 import com.management.Fragments.calendarFragment;
+import com.management.Fragments.scheduleFragment;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -78,7 +79,7 @@ public class MainActivity extends AppCompatActivity
 
         ActionBar bar = getSupportActionBar();
 
-        fm = getSupportFragmentManager();
+        fm = getFragmentManager();
         transaction = fm.beginTransaction();
         transaction.replace(R.id.contentHolder, new HomeFragment(), "homeFragment");
         transaction.commit();
