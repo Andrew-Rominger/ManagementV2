@@ -17,6 +17,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.management.Fragments.TimeSelectFragment;
 import com.management.Fragments.calendarFragment;
 import com.management.R;
 import com.management.Utilities;
@@ -33,8 +34,9 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
     FragmentManager fragmentManger;
 
     private LinearLayout startDateSelector;
-    private LinearLayout endTimeSelector;
+    private LinearLayout startTimeSelector;
     private LinearLayout endDateSelector;
+    private LinearLayout endTimeSelector;
 
     private FrameLayout startSelectorFragment;
 
@@ -80,7 +82,7 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
         bar.setHomeButtonEnabled(true);
 
         startDateSelector = (LinearLayout) findViewById(R.id.taskAddStartDateFrame);
-        endTimeSelector = (LinearLayout) findViewById(R.id.taskAddEndDateFrame);
+        startTimeSelector = (LinearLayout) findViewById(R.id.taskAddEndDateFrame);
         endDateSelector = (LinearLayout) findViewById(R.id.endDateSelector);
         startSelectorFragment = (FrameLayout) findViewById(R.id.startSelectorHolder);
         title = (EditText) findViewById(R.id.taskAddTitle);
@@ -92,6 +94,7 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
         fragmentManger = getSupportFragmentManager();
         startDateLine = findViewById(R.id.startDateLine);
         endDateLine = findViewById(R.id.endDateLine);
+        startTimeLine = findViewById(R.id.startTimeView);
 
         startDateSelector.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,6 +131,24 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
                 }
             }
         });
+        startTimeSelector.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isStartTimeOpen)
+                {
+                    startAnimateClose();
+                    startTimeLine.setVisibility(View.VISIBLE);
+                    isStartTimeOpen = false;
+                }
+                else
+                {
+                    currentShownStart = new TimeSelectFragment();
+                    startAnimateOpen(currentShownStart, startTimeSelector);
+                    startTimeLine.setVisibility(View.INVISIBLE);
+                    isEndTimeOpen = true;
+                }
+            }
+        });
 
     }
     @Override
@@ -155,7 +176,7 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
 
     private void startAnimateOpen(Fragment toInflate, LinearLayout l)
     {
-        if(l == startDateSelector) {
+        if(l == startDateSelector || l == startTimeSelector) {
             FragmentTransaction fragmentTransaction = fragmentManger.beginTransaction();
             fragmentTransaction.replace(R.id.startSelectorHolder, toInflate, "startDateFragment");
             fragmentTransaction.addToBackStack("addStartFragment");

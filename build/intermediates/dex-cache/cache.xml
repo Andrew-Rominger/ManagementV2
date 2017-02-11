@@ -16,8 +16,8 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="c03bf57f358aa10d253f21989e93bcf6014b3b17">
-        <dex dex="C:\Projects\ManagementV2\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-vector-drawable-25.1.1_2574e321d84efe069675003cab400b58cc0cc351\classes.dex" />
+        sha1="5e8b4848280c04ef3fd03ca01ce50972fc6f2d63">
+        <dex dex="/Users/wesleybanghart/AndroidStudioProjects/ManagementV2/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_59522911a9012302ee96b9143b95dca8fa8743e4/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -115,8 +115,8 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="b954d8588de65c67c1ec482678620845bbb5f737">
-        <dex dex="C:\Projects\ManagementV2\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-preference-v7-23.4.0_3f8f29f4837c45c2264dc32e41cfe140c96b853a\classes.dex" />
+        sha1="9c046a4ec6183d904787acbe21f49a530a029132">
+        <dex dex="/Users/wesleybanghart/AndroidStudioProjects/ManagementV2/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_9a69703ddf40bfc00b345aca83499ed075818acb/classes.dex" />
     </item>
     <item
         is-multidex="true"
