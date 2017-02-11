@@ -6,7 +6,7 @@ import java.util.Calendar;
  * Created by Andre on 2/10/2017.
  */
 
-public interface FragmentDataPasser
+public interface CalendarViewDataPasser
 {
-    public void passData(Calendar dataSelected);
+    void dayClicked(Calendar calendar);
 }

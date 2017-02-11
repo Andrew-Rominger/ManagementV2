@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -18,10 +19,12 @@ import android.widget.TextView;
 
 import com.management.Fragments.calendarFragment;
 import com.management.R;
+import com.management.interfaces.CalendarFragmentDataPasser;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
-public class AddTask extends AppCompatActivity
+public class AddTask extends AppCompatActivity implements CalendarFragmentDataPasser
 {
     private static final String TAG = AddTask.class.getSimpleName();
     public static SimpleDateFormat justTime = new SimpleDateFormat("h:mm aa");
@@ -42,6 +45,11 @@ public class AddTask extends AppCompatActivity
     TextView startTime;
     TextView endTime;
     int color;
+
+    Calendar startDateC;
+    Calendar startTimeC;
+    Calendar endDateC;
+    Calendar endTimeC;
 
     View startDateLine;
     View startTimeLine;
@@ -127,7 +135,7 @@ public class AddTask extends AppCompatActivity
     private void startAnimateOpen(Fragment toInflate)
     {
         FragmentTransaction fragmentTransaction = fragmentManger.beginTransaction();
-        fragmentTransaction.replace(R.id.startSelectorHolder, toInflate);
+        fragmentTransaction.replace(R.id.startSelectorHolder, toInflate, "");
         fragmentTransaction.addToBackStack("addStartFragment");
         fragmentTransaction.commit();
     }
@@ -137,5 +145,12 @@ public class AddTask extends AppCompatActivity
         FragmentTransaction fragmentTransaction = fragmentManger.beginTransaction();
         fragmentTransaction.remove(currentShownStart);
         fragmentTransaction.commit();
+    }
+
+
+    @Override
+    public void passData(Calendar calendar)
+    {
+        Log.d(TAG, "Activity got calendar");
     }
 }
