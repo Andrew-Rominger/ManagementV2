@@ -5,7 +5,10 @@ package com.management.Activities;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Context;
+import android.content.ContentValues;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
@@ -25,18 +28,21 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.management.BaseClasses.DataBaseClasses.Task;
 import com.management.Fragments.TimeSelectorFragment;
 import com.management.Fragments.calendarFragment;
 import com.management.R;
 import com.management.Utilities;
 import com.management.interfaces.CalendarFragmentDataPasser;
 import com.management.interfaces.ItimeSelector;
+import com.management.sqldatabase.DbTaskHelper;
+import com.management.sqldatabase.SqlTaskContract;
 import com.thebluealliance.spectrum.SpectrumDialog;
+import static com.management.sqldatabase.SqlTaskContract.FeedTasks.*;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Random;
-import java.util.StringTokenizer;
+
 
 public class AddTask extends AppCompatActivity implements CalendarFragmentDataPasser, ItimeSelector
 {
@@ -47,8 +53,7 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
     Calendar startDateC = Calendar.getInstance();
     Calendar endDateC = Calendar.getInstance();
 
-    @ColorInt int color;
-    @ColorRes int colorResource;
+    @ColorRes int color;
     int index;
     Random rand = new Random();
 
@@ -113,6 +118,21 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
 
     private void makeTask()
     {
+        startTimeC.set(Calendar.SECOND, 0);
+        endTimeC.set(Calendar.SECOND, 0);
+        Task task = new Task();
+        task.setColor(color);
+        task.setDescription(description.getText().toString());
+        task.setTitle(title.getText().toString());
+        task.setStartTimeM(startTimeC.get(Calendar.MINUTE));
+        task.setStartTimeH(startTimeC.get(Calendar.HOUR));
+        task.setEndTimeM(endTimeC.get(Calendar.MINUTE));
+        task.setEndTimeH(endTimeC.get(Calendar.HOUR));
+        task.setIsComplete(0);
+        task.setStartDateMS((int) startTimeC.getTimeInMillis());
+        task.setEndDateMS((int) endTimeC.getTimeInMillis());
+        Utilities.saveTask(this, task);
+        this.finish();
 
     }
 
@@ -197,7 +217,7 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
                                             }
                                         }
                                     }
-
+                                    color = Utilities.colorArray[index];
                                 }
                             }
                         }).build();
@@ -372,4 +392,6 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
 
         }
     }
+
+    
 }

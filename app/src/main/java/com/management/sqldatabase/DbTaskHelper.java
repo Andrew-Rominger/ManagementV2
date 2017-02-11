@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DbTaskHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 0;
+    private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "tasks.db";
     private static final String TEXT_TYPE = " TEXT";
     private static final String COMMA_SEP = " ,";
@@ -28,7 +28,15 @@ public class DbTaskHelper extends SQLiteOpenHelper {
                     SqlTaskContract.FeedTasks.COLUMN_START_TIME_H + INT_TYPE + COMMA_SEP +
                     SqlTaskContract.FeedTasks.COLUMN_START_TIME_M + INT_TYPE + COMMA_SEP +
                     SqlTaskContract.FeedTasks.COLUMN_COLOR + INT_TYPE + COMMA_SEP +
-                    SqlTaskContract.FeedTasks.COLUMN_IS_COMPLETE + INT_TYPE + COMMA_SEP +" )";
+                    SqlTaskContract.FeedTasks.COLUMN_IS_COMPLETE + INT_TYPE + COMMA_SEP +
+                    SqlTaskContract.FeedTasks.COLUMN_START_DATE_DAY + INT_TYPE + COMMA_SEP +
+                    SqlTaskContract.FeedTasks.COLUMN_START_DATE_MONTH + INT_TYPE + COMMA_SEP +
+                    SqlTaskContract.FeedTasks.COLUMN_START_DATE_YEAR + INT_TYPE + COMMA_SEP +
+                    SqlTaskContract.FeedTasks.COLUMN_END_DATE_DAY + INT_TYPE + COMMA_SEP +
+                    SqlTaskContract.FeedTasks.COLUMN_END_DATE_MONTH + INT_TYPE + COMMA_SEP +
+                    SqlTaskContract.FeedTasks.COLUMN_END_DATE_YEAR + INT_TYPE + COMMA_SEP +
+                    SqlTaskContract.FeedTasks.COLUMN_START_DATE_MS + INT_TYPE + COMMA_SEP +
+                    SqlTaskContract.FeedTasks.COLUMN_END_DATE_MS + INT_TYPE  +" )";
 
     public DbTaskHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

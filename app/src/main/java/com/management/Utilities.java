@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -12,9 +13,16 @@ import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
+
+import com.management.BaseClasses.DataBaseClasses.Task;
+import com.management.sqldatabase.DbTaskHelper;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import static com.management.sqldatabase.SqlTaskContract.FeedTasks.*;
+
 
 /**
  * Created by Andrew on 10/18/2016.
@@ -68,6 +76,51 @@ public class Utilities
         }
         return arr;
 
+    }
+    public static void saveTask(Context c, Task task)
+    {
+        SQLiteException exception = null;
+
+        DbTaskHelper th = new DbTaskHelper(c);
+        SQLiteDatabase db = th.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(COLUMN_TASK_NAME, task.getTitle());
+        cv.put(COLUMN_DESCRIPTION, task.getDescription());
+        cv.put(COLUMN_END_TIME_H, task.getEndTimeH());
+        cv.put(COLUMN_END_TIME_M, task.getEndTimeM());
+        cv.put(COLUMN_START_TIME_H, task.getStartTimeH());
+        cv.put(COLUMN_START_TIME_M, task.getStartTimeM());
+        cv.put(COLUMN_COLOR, task.getColor());
+        cv.put(COLUMN_IS_COMPLETE, task.getIsComplete());
+        cv.put(COLUMN_URGANCY, task.getUrgency());
+        cv.put(COLUMN_START_DATE_DAY, task.getStartDateDay());
+        cv.put(COLUMN_START_DATE_MONTH, task.getStartDateMonth());
+        cv.put(COLUMN_START_DATE_YEAR, task.getStartDateYear());
+        cv.put(COLUMN_END_DATE_DAY, task.getEndDateDay());
+        cv.put(COLUMN_END_DATE_MONTH, task.getEndDateMonth());
+        cv.put(COLUMN_END_DATE_YEAR, task.getEndDateYear());
+        cv.put(COLUMN_START_DATE_MS, task.getStartDateMS());
+        cv.put(COLUMN_END_DATE_MS, task.getEndDateMS());
+
+        try{
+            db.insert(TABLE_NAME, null, cv);
+        }
+        catch (SQLiteException e)
+        {
+            exception = e;
+            Log.e(TAG, "Failed to insert into database: "  + e.getMessage());
+        }
+        db.close();
+        if(exception != null)
+        {
+            Toast.makeText(c, "Task failed to be created", Toast.LENGTH_LONG).show();
+        }
+        else
+        {
+            Toast.makeText(c, "Task created", Toast.LENGTH_LONG).show();
+
+        }
     }
 }
 
