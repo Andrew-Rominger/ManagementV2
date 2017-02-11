@@ -153,7 +153,7 @@
                     android:layout_height="1dp"
                     android:background="@color/colorGreyLight"
                     android:layout_weight=".5"
-                    android:id="@+id/endDateLine"
+                    android:id="@+id/startTimeView"
                     />
             </LinearLayout>
             <FrameLayout
@@ -168,7 +168,8 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_weight=".5">
+                    android:layout_weight=".5"
+                    android:id="@+id/endDateSelector">
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_marginLeft="16dp"
@@ -213,13 +214,33 @@
                         android:background="@android:color/white"
                         android:layout_weight=".5"
                         android:id="@+id/endTimeTask" />
+
                 </LinearLayout>
             </LinearLayout>
-            <View
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorGreyLight"
-                />
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="1">
+                <View
+                    android:layout_width="189dp"
+                    android:layout_height="1dp"
+                    android:background="@color/colorGreyLight"
+                    android:id="@+id/endDateLine"
+                    android:layout_weight=".5"/>
+                <View
+                    android:layout_width="189dp"
+                    android:layout_height="1dp"
+                    android:background="@color/colorGreyLight"
+                    android:id="@+id/endTimeLine"
+                    android:layout_weight=".5"/>
+            </LinearLayout>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/endSelectorHolder"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="72dp"
@@ -234,13 +255,16 @@
                     />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@android:color/white"
                     android:gravity="center_vertical"
                     android:hint="Change Color"
-                    android:id="@+id/editText2" />
+                    android:id="@+id/editText2"
+                    android:layout_weight="1" />
+
             </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"

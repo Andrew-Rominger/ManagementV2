@@ -33,6 +33,7 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
 
     private LinearLayout startDateSelector;
     private LinearLayout endTimeSelector;
+    private LinearLayout endDateSelector;
 
     private FrameLayout startSelectorFragment;
 
@@ -79,6 +80,7 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
 
         startDateSelector = (LinearLayout) findViewById(R.id.taskAddStartDateFrame);
         endTimeSelector = (LinearLayout) findViewById(R.id.taskAddEndDateFrame);
+        endDateSelector = (LinearLayout) findViewById(R.id.endDateSelector);
         startSelectorFragment = (FrameLayout) findViewById(R.id.startSelectorHolder);
         title = (EditText) findViewById(R.id.taskAddTitle);
         description = (EditText) findViewById(R.id.taskAddDescription);
@@ -101,9 +103,27 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
                 }else
                 {
                     currentShownStart = new calendarFragment();
-                    startAnimateOpen(currentShownStart);
+                    startAnimateOpen(currentShownStart, startDateSelector);
                     startDateLine.setVisibility(View.INVISIBLE);
                     isStartDateOpen = true;
+                }
+            }
+        });
+        endDateSelector.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isEndDateOpen)
+                {
+                    startAnimateClose();
+                    endDateLine.setVisibility(View.VISIBLE);
+                    isEndDateOpen = false;
+                }
+                else
+                {
+                    currentShownStart = new calendarFragment();
+                    startAnimateOpen(currentShownStart, endDateSelector);
+                    endDateLine.setVisibility(View.INVISIBLE);
+                    isEndDateOpen = true;
                 }
             }
         });
@@ -132,19 +152,30 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
     }
 
 
-    private void startAnimateOpen(Fragment toInflate)
+    private void startAnimateOpen(Fragment toInflate, LinearLayout l)
     {
-        FragmentTransaction fragmentTransaction = fragmentManger.beginTransaction();
-        fragmentTransaction.replace(R.id.startSelectorHolder, toInflate, "");
-        fragmentTransaction.addToBackStack("addStartFragment");
-        fragmentTransaction.commit();
+        if(l == startDateSelector) {
+            FragmentTransaction fragmentTransaction = fragmentManger.beginTransaction();
+            fragmentTransaction.replace(R.id.startSelectorHolder, toInflate);
+            fragmentTransaction.addToBackStack("addStartFragment");
+            fragmentTransaction.commit();
+        }
+        else
+        {
+            FragmentTransaction fragmentTransaction = fragmentManger.beginTransaction();
+            fragmentTransaction.replace(R.id.endSelectorHolder, toInflate);
+            fragmentTransaction.addToBackStack("addStartFragment");
+            fragmentTransaction.commit();
+        }
     }
 
     private void startAnimateClose()
     {
-        FragmentTransaction fragmentTransaction = fragmentManger.beginTransaction();
-        fragmentTransaction.remove(currentShownStart);
-        fragmentTransaction.commit();
+
+            FragmentTransaction fragmentTransaction = fragmentManger.beginTransaction();
+            fragmentTransaction.remove(currentShownStart);
+            fragmentTransaction.commit();
+
     }
 
 
