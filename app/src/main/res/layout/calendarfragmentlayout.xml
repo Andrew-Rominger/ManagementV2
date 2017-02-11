@@ -14,11 +14,6 @@
             android:layout_height="match_parent"
             app:highliteColor="@color/colorPrimary">
         </com.management.Views.CalenderView>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Put Schedule For Selected Day Here"
-            android:gravity="center"/>
 
 
     </LinearLayout>

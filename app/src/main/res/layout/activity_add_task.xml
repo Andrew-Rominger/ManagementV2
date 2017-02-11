@@ -160,6 +160,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/StartFragmentHolder"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorGreyLight"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -241,6 +245,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/EndFragmentHolder"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorGreyLight"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
