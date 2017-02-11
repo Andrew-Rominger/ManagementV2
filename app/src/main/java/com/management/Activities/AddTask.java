@@ -28,8 +28,6 @@ public class AddTask extends AppCompatActivity
     public static SimpleDateFormat justTime = new SimpleDateFormat("h:mm aa");
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

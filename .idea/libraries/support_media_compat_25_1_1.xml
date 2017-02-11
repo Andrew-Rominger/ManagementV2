@@ -10,6 +10,10 @@
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/AppData/Local/Android/sdk/extras/android/m2repository/com/android/support/support-media-compat/25.1.1/support-media-compat-25.1.1-sources.jar!/" />
+<<<<<<< Updated upstream
+=======
+      <root url="jar://C:/SDK/extras/android/m2repository/com/android/support/support-media-compat/25.1.1/support-media-compat-25.1.1-sources.jar!/" />
+>>>>>>> Stashed changes
     </SOURCES>
   </library>
 </component>
