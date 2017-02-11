@@ -22,10 +22,33 @@ import java.util.Calendar;
 
 public class Utilities
 {
+    private static final String TAG = Utilities.class.getSimpleName();
     public static SimpleDateFormat MonthDayYearsdf = new SimpleDateFormat("MMM d, yyyy");
     public static SimpleDateFormat monthAndYear = new SimpleDateFormat("MMM, yyyy");
     public static SimpleDateFormat fullDateWithTime = new SimpleDateFormat("MMM d, yyyy @ h:mm aa");
     public static SimpleDateFormat justTime = new SimpleDateFormat("h:mm aa");
+    public static int[] colorArray = {
+            R.color.md_red_500,
+            R.color.md_pink_500,
+            R.color.md_purple_500,
+            R.color.md_deep_purple_500,
+            R.color.md_indigo_500,
+            R.color.md_blue_500,
+            R.color.md_light_blue_500,
+            R.color.md_cyan_500,
+            R.color.md_teal_500,
+            R.color.md_green_500,
+            R.color.md_light_green_500,
+            R.color.md_lime_500,
+            R.color.md_yellow_500,
+            R.color.md_amber_500,
+            R.color.md_orange_500,
+            R.color.md_deep_orange_500,
+            R.color.md_brown_500,
+            R.color.md_grey_500,
+            R.color.md_blue_grey_500,
+            R.color.md_white,
+    };
     public static ArrayList<Calendar> getDays(Context context, Calendar calendar)
     {
         ArrayList<Calendar> arr = new ArrayList<>();
@@ -45,6 +68,14 @@ public class Utilities
         }
         return arr;
 
+    }
+    public static void initColorArray(Activity activity)
+    {
+        colorArray = activity.getResources().getIntArray(R.array.task_colors);
+        for(int i = 0; i < 20; i ++)
+        {
+            Log.d(TAG,"Color array value: " + Utilities.colorArray[i] + "at index " + i);
+        }
     }
     public static void hideSoftKeyboard(Activity activity)
     {

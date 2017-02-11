@@ -106,7 +106,7 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="e6d5b5f464e4b2b73cb2084e0e97067d761968c6">
+        sha1="7f31eeafe055a6f4bd3918963d0a7bbe9e6f41b2">
         <dex dex="C:\Projects\ManagementV2\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_0339c3648f94702ccfdf3ca7a1b41df6a36c62d5\classes.dex" />
     </item>
     <item
@@ -117,6 +117,15 @@
         revision="25.0.2"
         sha1="b954d8588de65c67c1ec482678620845bbb5f737">
         <dex dex="C:\Projects\ManagementV2\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-preference-v7-23.4.0_3f8f29f4837c45c2264dc32e41cfe140c96b853a\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Projects\ManagementV2\app\build\intermediates\exploded-aar\com.wada811\android-material-design-colors\3.0.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="bfbbe620a997932386dfe4c0512dabea91384085">
+        <dex dex="C:\Projects\ManagementV2\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.wada811-android-material-design-colors-3.0.0_b13da310790b83c8cc86a773e6f9584fa5475ad4\classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -169,7 +178,7 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="4c7db7c66cf907ee8812917181f42c76d6a7564e">
+        sha1="ab7b03b377e572e01ddf4f5695c46aea464d4568">
         <dex dex="C:\Projects\ManagementV2\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_0e6dc3026cfad000d3937ac2238142c5d24f10fc\classes.dex" />
     </item>
     <item
