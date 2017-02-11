@@ -1,11 +1,14 @@
-package com.management;
+package com.management.Fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.management.R;
+
 public class calendarFragment extends Fragment
 {
     @Nullable

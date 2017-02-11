@@ -6,8 +6,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 import java.text.SimpleDateFormat;
@@ -86,6 +88,11 @@ public class Utilities
         }
         Log.i("getNext6Days", String.valueOf(cal.size()));
         return cal;
+    }
+
+    public static void expandAndFill(Fragment toExpand, View toFill)
+    {
+
 
     }
 

@@ -89,7 +89,9 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_weight=".5">
+                    android:layout_weight=".5"
+                    android:orientation="horizontal"
+                    android:id="@+id/taskAddStartDateFrame">
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_marginLeft="16dp"
@@ -98,6 +100,7 @@
                         android:layout_height="24dp"
                         android:src="@drawable/calendar_plus"
                         />
+
                     <EditText
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
@@ -105,7 +108,7 @@
                         android:hint="Start Date"
                         android:background="@android:color/white"
                         android:layout_weight=".5"
-                        android:layout_marginRight="16dp"/>
+                        android:id="@+id/editText4" />
                 </LinearLayout>
                 <View
                     android:layout_width="1dp"
@@ -115,7 +118,8 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_weight=".5">
+                    android:layout_weight=".5"
+                    android:id="@+id/taskAddEndDateFrame">
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
@@ -133,11 +137,28 @@
                         android:hint="Start Time"/>
                 </LinearLayout>
             </LinearLayout>
-            <View
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorGreyLight"
-                />
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorGreyLight"
+                    android:layout_weight=".5"
+                    />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorGreyLight"
+                    android:layout_weight=".5"
+                    />
+            </LinearLayout>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/startSelectorHolder"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="72dp"
@@ -154,6 +175,7 @@
                         android:layout_height="24dp"
                         android:src="@drawable/calendar_check"
                         />
+
                     <EditText
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
@@ -161,7 +183,8 @@
                         android:hint="End Date"
                         android:background="@android:color/white"
                         android:layout_weight=".5"
-                        android:layout_marginRight="16dp"/>
+
+                        android:id="@+id/editText3" />
                 </LinearLayout>
                 <View
                     android:layout_width="1dp"
@@ -207,12 +230,19 @@
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/brush"
                     />
+
                 <EditText
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:background="@android:color/white"
-                    android:hint="Change Color" />
+                    android:hint="Change Color"
+                    android:id="@+id/editText2" />
             </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorGreyLight"
+                />
         </LinearLayout>
 
     </ScrollView>
