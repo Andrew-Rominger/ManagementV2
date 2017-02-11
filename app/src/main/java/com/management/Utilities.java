@@ -57,6 +57,13 @@ public class Utilities
             R.color.md_blue_grey_500,
             R.color.md_white,
     };
+    public static void hideSoftKeyboard(Activity activity)
+    {
+        if(activity != null) {
+            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+        }
+    }
     public static ArrayList<Calendar> getDays(Context context, Calendar calendar)
     {
         ArrayList<Calendar> arr = new ArrayList<>();

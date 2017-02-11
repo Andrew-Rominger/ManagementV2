@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -57,14 +58,18 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
     int index;
     Random rand = new Random();
 
-    FragmentManager fragmentManger;
+
 
     LinearLayout startDateTouchTarget;
     LinearLayout startTimeTouchTarget;
     LinearLayout endDateTouchTarget;
     LinearLayout endTimeTouchTarget;
     LinearLayout colorChangeTouchTarget;
-    FrameLayout startFragmentHolder;
+
+    FrameLayout startTimeFragmentHolder;
+    FrameLayout startDateFragmentHolder;
+    FrameLayout endTimeFragmentHolder;
+    FrameLayout endDateFragmentHolder;
 
     TextView title;
     TextView description;
@@ -80,7 +85,13 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
 
     Toolbar toolbar;
 
-    Fragment currentShownFragment;
+    calendarFragment startDateFragment;
+    calendarFragment endDateFragment;
+    TimeSelectorFragment startTimeFragment;
+    TimeSelectorFragment endTimeFragment;
+
+    TaskLayoutManager manager;
+
 
     boolean isStartTimeOpen = false;
     boolean isEndTimeOpen = false;
@@ -91,15 +102,16 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
     public void passData(Calendar calendar)
     {
         Log.d(TAG, "Activity got calendar");
-        if(isStartDateOpen) {
+        if(manager.getIndex() == 0) {
             startDateDisplay.setText(Utilities.MonthDayYearsdf.format(calendar.getTime()));
             startDateC = calendar;
         }
-        else
+        else if(manager.getIndex() == 2)
         {
             endDateDisplay.setText(Utilities.MonthDayYearsdf.format(calendar.getTime()));
             endDateC = calendar;
         }
+        manager.close();
     }
 
     @Override
@@ -148,7 +160,37 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_task);
+
         toolbar = (Toolbar) findViewById(R.id.addTaskToolbar);
+
+        startDateTouchTarget = (LinearLayout) findViewById(R.id.StartDateTouchTarget);
+        startTimeTouchTarget = (LinearLayout) findViewById(R.id.StartTimeTouchTarget);
+        endDateTouchTarget = (LinearLayout) findViewById(R.id.EndDateTouchTarget);
+        endTimeTouchTarget = (LinearLayout) findViewById(R.id.EndTimeTouchTarget);
+        colorChangeTouchTarget = (LinearLayout) findViewById(R.id.colorChangeTouchTarget);
+
+
+        startTimeFragmentHolder = (FrameLayout) findViewById(R.id.startTimeFragmentHolder);
+        startDateFragmentHolder = (FrameLayout) findViewById(R.id.startDateFragmentHolder);
+        endTimeFragmentHolder = (FrameLayout) findViewById(R.id.endTimeFragmentHolder);
+        endDateFragmentHolder = (FrameLayout) findViewById(R.id.endDateFragmentHolder);
+
+
+        title = (EditText) findViewById(R.id.taskAddTitle);
+        description = (EditText) findViewById(R.id.taskAddDescription);
+
+        startDateDisplay = (TextView) findViewById(R.id.startDateDisplay);
+        endDateDisplay = (TextView) findViewById(R.id.endDateDisplay);
+        startTimeDisplay = (TextView) findViewById(R.id.startTimeDisplay);
+        endTimeDisplay = (TextView) findViewById(R.id.endTimeDisplay);
+
+
+
+        startDateUnderbar = findViewById(R.id.startDateDivider);
+        endDateUnderbar= findViewById(R.id.endDateDivider);
+        startTimeUnderbar= findViewById(R.id.startTimeDivider);
+        endTimeUnderbar = findViewById(R.id.endTimeDivider);
+
 
         index = rand.nextInt(20);
         Log.d(TAG, "Color resource: " + Utilities.colorArray[index] + ", Array index: " + index);
@@ -159,34 +201,15 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
         bar.setDisplayHomeAsUpEnabled(true);
         bar.setHomeButtonEnabled(true);
 
-        startDateTouchTarget = (LinearLayout) findViewById(R.id.StartDateTouchTarget);
-        startTimeTouchTarget = (LinearLayout) findViewById(R.id.StartTimeTouchTarget);
-        endDateTouchTarget = (LinearLayout) findViewById(R.id.EndDateTouchTarget);
-        startFragmentHolder = (FrameLayout) findViewById(R.id.StartFragmentHolder);
-        title = (EditText) findViewById(R.id.taskAddTitle);
-        description = (EditText) findViewById(R.id.taskAddDescription);
-        startDateDisplay = (TextView) findViewById(R.id.startDateDisplay);
-        endDateDisplay = (TextView) findViewById(R.id.endDateDisplay);
-        endTimeTouchTarget = (LinearLayout) findViewById(R.id.EndTimeTouchTarget);
-        startTimeDisplay = (TextView) findViewById(R.id.startTimeDisplay);
-        endTimeDisplay = (TextView) findViewById(R.id.endTimeDisplay);
-        fragmentManger = getFragmentManager();
-        startDateUnderbar = findViewById(R.id.StartDateUnderbar);
-        endDateUnderbar= findViewById(R.id.EndDateUnderbar);
-        startTimeUnderbar= findViewById(R.id.StartTimeUnderbar);
-        endTimeUnderbar = findViewById(R.id.EndTimeUnderbar);
-        colorChangeTouchTarget = (LinearLayout) findViewById(R.id.colorChangeTouchTarget);
+        manager = new TaskLayoutManager(this);
 
         colorChangeTouchTarget.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                closeFragment();
-                startDateUnderbar.setVisibility(View.VISIBLE);
-                startTimeUnderbar.setVisibility(View.VISIBLE);
-                endTimeUnderbar.setVisibility(View.VISIBLE);
-                endDateUnderbar.setVisibility(View.VISIBLE);
+                Utilities.hideSoftKeyboard(AddTask.this);
+                manager.close();
                 SpectrumDialog dialog = new SpectrumDialog.Builder(v.getContext())
                         .setColors(R.array.task_colors)
                         .setSelectedColorRes(Utilities.colorArray[index])
@@ -225,34 +248,18 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
                 dialog.show(getSupportFragmentManager(), "Pick Color");
             }
         });
-
-
         startDateTouchTarget.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
                 Log.d(TAG, "start date tapped");
-                if(currentShownFragment instanceof calendarFragment && isStartDateOpen)
+                if(startDateFragment == null)
                 {
-                    Log.d(TAG, "tapped again, closing");
-                    isStartDateOpen = false;
-                    closeFragment();
-                    startDateUnderbar.setVisibility(View.VISIBLE);
-                    startTimeUnderbar.setVisibility(View.VISIBLE);
-                    endTimeUnderbar.setVisibility(View.VISIBLE);
-                    endDateUnderbar.setVisibility(View.VISIBLE);
-
-                    return;
+                    startDateFragment = new calendarFragment();
                 }
-                isStartDateOpen = true;
-                isEndDateOpen = false;
-                openStartFragment(new calendarFragment());
-                startDateUnderbar.setVisibility(View.INVISIBLE);
-                startTimeUnderbar.setVisibility(View.VISIBLE);
-                endTimeUnderbar.setVisibility(View.VISIBLE);
-                endDateUnderbar.setVisibility(View.VISIBLE);
-
+                Utilities.hideSoftKeyboard(AddTask.this);
+                manager.updateDisplay(startDateFragment,0);
             }
         });
         endDateTouchTarget.setOnClickListener(new View.OnClickListener() {
@@ -260,24 +267,12 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
             public void onClick(View v)
             {
                 Log.d(TAG, "end date tapped");
-                if(currentShownFragment instanceof  calendarFragment && isEndDateOpen)
+                if(endDateFragment == null)
                 {
-                    Log.d(TAG, "tapped again, closing");
-                    isEndDateOpen = false;
-                    closeFragment();
-                    endDateUnderbar.setVisibility(View.VISIBLE);
-                    endTimeUnderbar.setVisibility(View.VISIBLE);
-                    startDateUnderbar.setVisibility(View.VISIBLE);
-                    startTimeUnderbar.setVisibility(View.VISIBLE);
-                    return;
+                    endDateFragment = new calendarFragment();
                 }
-                isEndDateOpen = true;
-                isStartDateOpen = false;
-                openEndFragment(new calendarFragment());
-                endDateUnderbar.setVisibility(View.INVISIBLE);
-                endTimeUnderbar.setVisibility(View.VISIBLE);
-                startDateUnderbar.setVisibility(View.VISIBLE);
-                startTimeUnderbar.setVisibility(View.VISIBLE);
+                Utilities.hideSoftKeyboard(AddTask.this);
+                manager.updateDisplay(endDateFragment,2);
             }
         });
         endTimeTouchTarget.setOnClickListener(new View.OnClickListener() {
@@ -285,24 +280,12 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
             public void onClick(View v)
             {
                 Log.d(TAG, "end time tapped");
-                if(currentShownFragment instanceof TimeSelectorFragment && isEndTimeOpen)
+                if(endTimeFragment == null)
                 {
-                    Log.d(TAG, "tapped again, closing");
-                    isEndTimeOpen = false;
-                    closeFragment();
-                    endTimeUnderbar.setVisibility(View.VISIBLE);
-                    endDateUnderbar.setVisibility(View.VISIBLE);
-                    startTimeUnderbar.setVisibility(View.VISIBLE);
-                    startDateUnderbar.setVisibility(View.VISIBLE);
-                    return;
+                    endTimeFragment = new TimeSelectorFragment();
                 }
-                isEndTimeOpen = true;
-                isStartTimeOpen = false;
-                openEndFragment(new TimeSelectorFragment());
-                endTimeUnderbar.setVisibility(View.INVISIBLE);
-                endDateUnderbar.setVisibility(View.VISIBLE);
-                startTimeUnderbar.setVisibility(View.VISIBLE);
-                startDateUnderbar.setVisibility(View.VISIBLE);
+                Utilities.hideSoftKeyboard(AddTask.this);
+                manager.updateDisplay(endTimeFragment, 3);
 
             }
         });
@@ -311,87 +294,121 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
             public void onClick(View v)
             {
                 Log.d(TAG, "start time tapped");
-                if(currentShownFragment instanceof TimeSelectorFragment && isStartTimeOpen)
+                if(startTimeFragment == null)
                 {
-                    Log.d(TAG, "tapped again, closing");
-                    isStartTimeOpen = false;
-                    closeFragment();
-                    startTimeUnderbar.setVisibility(View.VISIBLE);
-                    startDateUnderbar.setVisibility(View.VISIBLE);
-                    endDateUnderbar.setVisibility(View.VISIBLE);
-                    endTimeUnderbar.setVisibility(View.VISIBLE);
-                    return;
+                    startTimeFragment = new TimeSelectorFragment();
                 }
-                isStartTimeOpen = true;
-                isEndTimeOpen = false;
-                openStartFragment(new TimeSelectorFragment());
-                startTimeUnderbar.setVisibility(View.INVISIBLE);
-                startDateUnderbar.setVisibility(View.VISIBLE);
-                endDateUnderbar.setVisibility(View.VISIBLE);
-                endTimeUnderbar.setVisibility(View.VISIBLE);
+                Utilities.hideSoftKeyboard(AddTask.this);
+                manager.updateDisplay(startTimeFragment, 1);
+
             }
         });
-    }
-
-    void openStartFragment(Fragment fragment)
-    {
-        if(currentShownFragment != null)
-        {
-            closeFragment();
-        }
-        currentShownFragment = fragment;
-        openFragment(currentShownFragment, R.id.StartFragmentHolder);
-    }
-    void openEndFragment(Fragment fragment)
-    {
-        if(currentShownFragment != null)
-        {
-            closeFragment();
-        }
-        if((currentShownFragment instanceof calendarFragment && fragment instanceof calendarFragment) || (currentShownFragment instanceof TimeSelectorFragment && fragment instanceof TimeSelectorFragment))
-        {
-            Log.d(TAG, "Tapped end start again, closing");
-            closeFragment();
-            return;
-        }
-        currentShownFragment = fragment;
-        openFragment(currentShownFragment, R.id.EndFragmentHolder);
-    }
-    void closeFragment()
-    {
-        if(currentShownFragment == null)
-        {
-            return;
-        }
-        FragmentTransaction transaction = fragmentManger.beginTransaction();
-        transaction.remove(currentShownFragment);
-        transaction.commit();
-        currentShownFragment = null;
-
-    }
-    void openFragment(Fragment fragment, int view)
-    {
-        FragmentTransaction transaction = fragmentManger.beginTransaction();
-        transaction.replace(view, fragment);
-        transaction.commit();
     }
 
     @Override
     public void passTime(Calendar c)
     {
         Log.d(TAG, "isStartTimeOpen: " + isStartTimeOpen + ", isEndTimeOpen: " + isEndTimeOpen);
-        if(isStartTimeOpen)
+        if(manager.getIndex() == 1)
         {
             startTimeC = c;
             startTimeDisplay.setText(Utilities.justTime.format(c.getTime()));
         }
-        else if(isEndTimeOpen)
+        else if(manager.getIndex() == 3)
         {
             endTimeC = c;
             endTimeDisplay.setText(Utilities.justTime.format(c.getTime()));
 
         }
+        manager.close();
     }
+    public class TaskLayoutManager
+    {
+        private Fragment shownFragment;
+        Context context;
+        FragmentManager fragmentManger;
+        private int index;
 
-    
+        int getIndex() {
+            return index;
+        }
+
+        TaskLayoutManager(Context context)
+        {
+            this.context = context;
+            fragmentManger = getFragmentManager();
+            shownFragment = null;
+        }
+        void updateDisplay(Fragment fragment, int index)
+        {
+            if(fragment.equals(shownFragment))
+            {
+                close();
+                return;
+            }
+            this.index = index;
+            if(fragment instanceof calendarFragment)
+            {
+                switch (index)
+                {
+                    case 0:
+                        openStartDateFragment(fragment);
+                        break;
+                    case 2:
+                        openEndDateFragment(fragment);
+                }
+            }else if(fragment instanceof TimeSelectorFragment)
+            {
+                switch (index)
+                {
+                    case 1:
+                        openStartTimeFragment(fragment);
+                        break;
+                    case 3:
+                        openEndTimeFragment(fragment);
+                }
+            }
+        }
+
+        private void openEndTimeFragment(Fragment fragment)
+        {
+            openFragment(fragment, endTimeFragmentHolder);
+        }
+
+        private void openStartTimeFragment(Fragment fragment)
+        {
+            openFragment(fragment, startTimeFragmentHolder);
+        }
+
+        private void openEndDateFragment(Fragment fragment)
+        {
+            openFragment(fragment, endDateFragmentHolder);
+        }
+
+        private void openStartDateFragment(Fragment fragment)
+        {
+            openFragment(fragment, startDateFragmentHolder);
+        }
+
+        private void close()
+        {
+            if(shownFragment == null)
+            {
+                return;
+            }
+            FragmentTransaction transaction = fragmentManger.beginTransaction();
+            transaction.remove(shownFragment);
+            transaction.commit();
+            shownFragment = null;
+        }
+
+        private void openFragment(Fragment fragment, View view)
+        {
+            close();
+            FragmentTransaction transaction = fragmentManger.beginTransaction();
+            shownFragment = fragment;
+            transaction.replace(view.getId(), fragment);
+            transaction.commit();
+        }
+    }
 }

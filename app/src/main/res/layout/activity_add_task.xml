@@ -6,7 +6,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     xmlns:tools="http://schemas.android.com/tools">
-
     <android.support.v7.widget.Toolbar
         android:id="@+id/addTaskToolbar"
         android:layout_width="match_parent"
@@ -19,10 +18,6 @@
     <ScrollView
         android:layout_height="wrap_content"
         android:layout_width="match_parent">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -43,6 +38,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginRight="16dp"
                         android:hint="Add Title"
+                        android:textColor="@android:color/black"
                         android:background="@android:color/white"
                         android:layout_gravity="center_vertical"
                         android:inputType="textCapSentences"
@@ -70,6 +66,7 @@
                         android:background="@android:color/white"
                         android:layout_height="match_parent"
                         android:hint="Add Description"
+                        android:textColor="@android:color/black"
                         android:gravity="center_vertical"
                         android:inputType="textCapSentences|textMultiLine|textAutoComplete|textAutoCorrect"
                         android:id="@+id/taskAddDescription"/>
@@ -80,15 +77,9 @@
                     android:background="@color/colorGreyLight"
                     />
 
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="72dp"
-                android:orientation="horizontal">
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight=".5"
+                    android:layout_width="match_parent"
+                    android:layout_height="72dp"
                     android:orientation="horizontal"
                     android:id="@+id/StartDateTouchTarget">
                     <ImageView
@@ -108,15 +99,20 @@
                         android:background="@android:color/white"
                         android:id="@+id/startDateDisplay" />
                 </LinearLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/startDateFragmentHolder"/>
                 <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
                     android:background="@color/colorGreyLight"
-                    />
+                    android:id="@+id/startDateDivider"/>
+
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight=".5"
+                    android:layout_width="match_parent"
+                    android:layout_height="72dp"
                     android:id="@+id/StartTimeTouchTarget">
                     <ImageView
                         android:layout_width="24dp"
@@ -135,44 +131,20 @@
                         android:hint="Start Time"
                         android:id="@+id/startTimeDisplay"/>
                 </LinearLayout>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="1">
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/startTimeFragmentHolder"/>
+
                 <View
-                    android:layout_width="wrap_content"
-                    android:layout_height="1dp"
-                    android:background="@color/colorGreyLight"
-                    android:id="@+id/StartDateUnderbar"
-                    android:layout_weight=".5"
-                    />
-                <View
-                    android:layout_width="wrap_content"
-                    android:layout_height="1dp"
-                    android:background="@color/colorGreyLight"
-                    android:layout_weight=".5"
-                    android:id="@+id/StartTimeUnderbar"
-                    />
-            </LinearLayout>
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/StartFragmentHolder"/>
-            <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/colorGreyLight"/>
+                android:background="@color/colorGreyLight"
+                    android:id="@+id/startTimeDivider"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="72dp"
-                android:orientation="horizontal">
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight=".5"
+                    android:layout_width="match_parent"
+                    android:layout_height="72dp"
                     android:id="@+id/EndDateTouchTarget">
                     <ImageView
                         android:layout_width="24dp"
@@ -189,18 +161,21 @@
                         android:gravity="center_vertical"
                         android:hint="End Date"
                         android:background="@android:color/white"
-                        android:layout_weight=".5"
                         android:id="@+id/endDateDisplay" />
                 </LinearLayout>
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/endDateFragmentHolder"/>
                 <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
                     android:background="@color/colorGreyLight"
-                    />
+                    android:id="@+id/endDateDivider"/>
+
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight=".5"
+                    android:layout_width="match_parent"
+                    android:layout_height="72dp"
                     android:id="@+id/EndTimeTouchTarget">
                     <ImageView
                         android:layout_width="24dp"
@@ -219,36 +194,16 @@
                         android:background="@android:color/white"
                         android:layout_weight=".5"
                         android:id="@+id/endTimeDisplay" />
-
                 </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:weightSum="1">
-                <View
-                    android:layout_width="189dp"
-                    android:layout_height="1dp"
-                    android:background="@color/colorGreyLight"
-                    android:id="@+id/EndDateUnderbar"
-                    android:layout_weight=".5"/>
-                <View
-                    android:layout_width="189dp"
-                    android:layout_height="1dp"
-                    android:background="@color/colorGreyLight"
-                    android:id="@+id/EndTimeUnderbar"
-                    android:layout_weight=".5"/>
-            </LinearLayout>
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/EndFragmentHolder"/>
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/endTimeFragmentHolder"/>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/colorGreyLight"/>
+                android:background="@color/colorGreyLight"
+                android:id="@+id/endTimeDivider"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -283,4 +238,7 @@
         </LinearLayout>
 
     </ScrollView>
+
+
+
 </LinearLayout>
