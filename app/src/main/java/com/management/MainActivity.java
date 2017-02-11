@@ -1,10 +1,9 @@
 package com.management;
-
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -79,7 +78,7 @@ public class MainActivity extends AppCompatActivity
 
         ActionBar bar = getSupportActionBar();
 
-        fm = getFragmentManager();
+        fm = getSupportFragmentManager();
         transaction = fm.beginTransaction();
         transaction.replace(R.id.contentHolder, new HomeFragment(), "homeFragment");
         transaction.commit();
