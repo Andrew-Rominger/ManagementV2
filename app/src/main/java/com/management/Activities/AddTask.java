@@ -42,6 +42,8 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
 
     Calendar startTimeC = Calendar.getInstance();
     Calendar endTimeC = Calendar.getInstance();
+    Calendar startDateC = Calendar.getInstance();
+    Calendar endDateC = Calendar.getInstance();
 
     @ColorInt int color;
     @ColorRes int colorResource;
@@ -82,7 +84,15 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
     public void passData(Calendar calendar)
     {
         Log.d(TAG, "Activity got calendar");
-        startDateDisplay.setText(Utilities.MonthDayYearsdf.format(calendar.getTime()));
+        if(isStartDateOpen) {
+            startDateDisplay.setText(Utilities.MonthDayYearsdf.format(calendar.getTime()));
+            startDateC = calendar;
+        }
+        else
+        {
+            endDateDisplay.setText(Utilities.MonthDayYearsdf.format(calendar.getTime()));
+            endDateC = calendar;
+        }
     }
 
     @Override
