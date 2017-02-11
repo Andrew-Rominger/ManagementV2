@@ -27,11 +27,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.management.Listners.dayClickListner;
-import com.management.Activities.AddTask;
-import com.management.Fragments.calendarFragment;
 import com.management.R;
 import com.management.Utilities;
-import com.management.interfaces.CalendarViewDataPasser;
 
 
 import java.text.SimpleDateFormat;
@@ -71,7 +68,7 @@ public class CalenderView extends LinearLayout
 
     dayClickListner dayClickListner;
 
-    CalendarViewDataPasser dataPasser;
+
 
     final String TAG = CalenderView.class.getSimpleName();
     public CalenderView(Context context, AttributeSet attrs)
@@ -81,7 +78,6 @@ public class CalenderView extends LinearLayout
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.CalenderView, 0,0);
         Activity activity = (Activity) context;
         manager = activity.getFragmentManager();
-        dataPasser = (CalendarViewDataPasser) manager.findFragmentByTag("startDateFragment");
 
         try {
             highlightColor = a.getColor(R.styleable.CalenderView_highliteColor, Color.YELLOW);

@@ -28,6 +28,7 @@ import com.management.Fragments.calendarFragment;
 import com.management.R;
 import com.management.Utilities;
 import com.management.interfaces.CalendarFragmentDataPasser;
+import com.management.interfaces.ItimeSelector;
 import com.thebluealliance.spectrum.SpectrumDialog;
 
 import java.text.SimpleDateFormat;
@@ -35,9 +36,12 @@ import java.util.Calendar;
 import java.util.Random;
 import java.util.StringTokenizer;
 
-public class AddTask extends AppCompatActivity implements CalendarFragmentDataPasser
+public class AddTask extends AppCompatActivity implements CalendarFragmentDataPasser, ItimeSelector
 {
     private static final String TAG = AddTask.class.getSimpleName();
+
+    Calendar startTimeC = Calendar.getInstance();
+    Calendar endTimeC = Calendar.getInstance();
 
     @ColorInt int color;
     @ColorRes int colorResource;
@@ -196,6 +200,7 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
                     return;
                 }
                 isStartDateOpen = true;
+                isEndDateOpen = false;
                 openStartFragment(new calendarFragment());
                 startDateUnderbar.setVisibility(View.INVISIBLE);
                 startTimeUnderbar.setVisibility(View.VISIBLE);
@@ -221,6 +226,7 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
                     return;
                 }
                 isEndDateOpen = true;
+                isStartDateOpen = false;
                 openEndFragment(new calendarFragment());
                 endDateUnderbar.setVisibility(View.INVISIBLE);
                 endTimeUnderbar.setVisibility(View.VISIBLE);
@@ -245,6 +251,7 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
                     return;
                 }
                 isEndTimeOpen = true;
+                isStartTimeOpen = false;
                 openEndFragment(new TimeSelectorFragment());
                 endTimeUnderbar.setVisibility(View.INVISIBLE);
                 endDateUnderbar.setVisibility(View.VISIBLE);
@@ -270,6 +277,7 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
                     return;
                 }
                 isStartTimeOpen = true;
+                isEndTimeOpen = false;
                 openStartFragment(new TimeSelectorFragment());
                 startTimeUnderbar.setVisibility(View.INVISIBLE);
                 startDateUnderbar.setVisibility(View.VISIBLE);
@@ -320,5 +328,22 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
         FragmentTransaction transaction = fragmentManger.beginTransaction();
         transaction.replace(view, fragment);
         transaction.commit();
+    }
+
+    @Override
+    public void passTime(Calendar c)
+    {
+        Log.d(TAG, "isStartTimeOpen: " + isStartTimeOpen + ", isEndTimeOpen: " + isEndTimeOpen);
+        if(isStartTimeOpen)
+        {
+            startTimeC = c;
+            startTimeDisplay.setText(Utilities.justTime.format(c.getTime()));
+        }
+        else if(isEndTimeOpen)
+        {
+            endTimeC = c;
+            endTimeDisplay.setText(Utilities.justTime.format(c.getTime()));
+
+        }
     }
 }

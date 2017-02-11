@@ -4,10 +4,12 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import com.management.Listners.timeSelectorListner;
 
 import com.management.R;
 import com.management.Utilities;
@@ -20,56 +22,54 @@ import java.util.Calendar;
 
 public class TimeSelecterView extends LinearLayout
 {
-    ImageView minusEndTime;
-    ImageView minusStartTime;
-    ImageView plusEndTime;
-    ImageView plusStartTime;
-    SeekBar startTimeBar;
-    SeekBar endTimeBar;
-    private TextView endTime;
-    private TextView startTime;
+    ImageView minusTime;
+    ImageView plusTime;
 
-    Calendar startTimeC;
-    Calendar endTimeC;
+    SeekBar timeBar;
 
+    private TextView shownTime;
+
+    Button okButton;
+
+    Calendar selectedTime;
+
+    timeSelectorListner listner;
 
     public TimeSelecterView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
+        listner = new timeSelectorListner();
         setupView();
+        updateCalendars();
     }
 
     void setupView()
     {
-        startTimeC = Calendar.getInstance();
-        endTimeC = Calendar.getInstance();
+        selectedTime = Calendar.getInstance();
 
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.timeselecterlayout, this);
 
-        startTimeBar = (SeekBar) findViewById(R.id.startSeek);
-        endTimeBar = (SeekBar) findViewById(R.id.endSeek);
+        timeBar = (SeekBar) findViewById(R.id.timeSeek);
 
-        endTime = (TextView) findViewById(R.id.endClock);
-        startTime = (TextView) findViewById(R.id.startClock);
+        shownTime = (TextView) findViewById(R.id.shownTime);
 
-        plusEndTime = (ImageView) findViewById(R.id.plusEndTime);
-        minusEndTime = (ImageView) findViewById(R.id.minusEndTime);
+        plusTime = (ImageView) findViewById(R.id.plusTime);
+        minusTime = (ImageView) findViewById(R.id.minusTime);
 
-
-        minusStartTime = (ImageView) findViewById(R.id.minusStartTime);
-        plusStartTime = (ImageView) findViewById(R.id.plusStartTime);
+        okButton = (Button) findViewById(R.id.timeFragmentButton);
 
 
-        startTimeBar.setMax(11);
-        endTimeBar.setMax(11);
+        timeBar.setMax(11);
 
-        startTimeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
+        timeBar.setProgress(selectedTime.get(Calendar.MINUTE) / 5);
+
+        timeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
         {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
             {
-                startTimeC.set(Calendar.MINUTE, (progress * 5));
+                selectedTime.set(Calendar.MINUTE, (progress * 5));
                 updateCalendars();
             }
 
@@ -85,59 +85,39 @@ public class TimeSelecterView extends LinearLayout
 
             }
         });
-        endTimeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
-        {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                endTimeC.set(Calendar.MINUTE, (progress * 5));
-                updateCalendars();
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-        plusEndTime.setOnClickListener(new OnClickListener() {
+        plusTime.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v)
             {
-                endTimeC.add(Calendar.HOUR, 1);
+                selectedTime.add(Calendar.HOUR, 1);
                 updateCalendars();
             }
         });
-        plusStartTime.setOnClickListener(new OnClickListener() {
+        minusTime.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                startTimeC.add(Calendar.HOUR, 1);
+                selectedTime.add(Calendar.HOUR, -1);
                 updateCalendars();
             }
         });
-        minusEndTime.setOnClickListener(new OnClickListener() {
+
+        okButton.setOnClickListener(new OnClickListener() {
             @Override
-            public void onClick(View v) {
-                endTimeC.add(Calendar.HOUR, -1);
-                updateCalendars();
-            }
-        });
-        minusStartTime.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startTimeC.add(Calendar.HOUR, -1);
-                updateCalendars();
+            public void onClick(View v)
+            {
+                listner.timePass(selectedTime);
             }
         });
 
     }
 
+    public void setOnOkListner(timeSelectorListner listner)
+    {
+        this.listner = listner;
+    }
+
     void updateCalendars()
     {
-        endTime.setText(Utilities.justTime.format(endTimeC.getTime()));
-        startTime.setText(Utilities.justTime.format(startTimeC.getTime()));
+        shownTime.setText(Utilities.justTime.format(selectedTime.getTime()));
     }
 }

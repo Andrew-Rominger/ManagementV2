@@ -14,16 +14,17 @@ import com.management.R;
 import com.management.Utilities;
 import com.management.Views.CalenderView;
 import com.management.interfaces.CalendarFragmentDataPasser;
-import com.management.interfaces.CalendarViewDataPasser;
 
 import java.util.Calendar;
 
 
-public class calendarFragment extends Fragment implements CalendarViewDataPasser
+public class calendarFragment extends Fragment
 {
     private static final String TAG = calendarFragment.class.getSimpleName();
     CalenderView calenderView;
+
     CalendarFragmentDataPasser dataPasser;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -60,9 +61,4 @@ public class calendarFragment extends Fragment implements CalendarViewDataPasser
         dataPasser.passData(startDate);
     }
 
-    @Override
-    public void dayClicked(Calendar calendar)
-    {
-        passData(calendar);
-    }
 }
