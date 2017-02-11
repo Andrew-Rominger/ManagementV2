@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.management.Fragments.calendarFragment;
 import com.management.R;
+import com.management.Utilities;
 import com.management.interfaces.CalendarFragmentDataPasser;
 
 import java.text.SimpleDateFormat;
@@ -156,7 +157,7 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
     {
         if(l == startDateSelector) {
             FragmentTransaction fragmentTransaction = fragmentManger.beginTransaction();
-            fragmentTransaction.replace(R.id.startSelectorHolder, toInflate);
+            fragmentTransaction.replace(R.id.startSelectorHolder, toInflate, "startDateFragment");
             fragmentTransaction.addToBackStack("addStartFragment");
             fragmentTransaction.commit();
         }
@@ -177,11 +178,10 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
             fragmentTransaction.commit();
 
     }
-
-
     @Override
     public void passData(Calendar calendar)
     {
         Log.d(TAG, "Activity got calendar");
+        startDate.setText(Utilities.MonthDayYearsdf.format(calendar.getTime()));
     }
 }

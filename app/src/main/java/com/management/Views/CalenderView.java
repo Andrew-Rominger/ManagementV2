@@ -1,5 +1,7 @@
 package com.management.Views;
 
+import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -24,6 +26,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.management.Listners.dayClickListner;
+import com.management.Activities.AddTask;
 import com.management.Fragments.calendarFragment;
 import com.management.R;
 import com.management.Utilities;
@@ -61,6 +65,12 @@ public class CalenderView extends LinearLayout
     boolean changeColor = false;
     boolean isSwitched = false;
 
+    Context context;
+
+    FragmentManager manager;
+
+    dayClickListner dayClickListner;
+
     CalendarViewDataPasser dataPasser;
 
     final String TAG = CalenderView.class.getSimpleName();
@@ -68,8 +78,11 @@ public class CalenderView extends LinearLayout
     {
         super(context, attrs);
         prevSelectedDay= Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-        dataPasser = (CalendarViewDataPasser) getContext();
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.CalenderView, 0,0);
+        Activity activity = (Activity) context;
+        manager = activity.getFragmentManager();
+        dataPasser = (CalendarViewDataPasser) manager.findFragmentByTag("startDateFragment");
+
         try {
             highlightColor = a.getColor(R.styleable.CalenderView_highliteColor, Color.YELLOW);
         }
@@ -79,6 +92,9 @@ public class CalenderView extends LinearLayout
         initControl();
 
     }
+
+
+
     private void initControl()
     {
         inflator = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -122,15 +138,18 @@ public class CalenderView extends LinearLayout
                 Calendar c = (Calendar) adapterView.getItemAtPosition(i);
                 Calendar c2 = Calendar.getInstance();
                 Log.i(TAG, "Clicked on " + sdf2.format(c.getTime()) + " at position " + i);
-                dataPasser.dayClicked(c);
+                dayClickListner.onDayClicked(c);
                 highlightSelection(view);
-
                 prevSelectedDay = c.get(Calendar.DAY_OF_MONTH);
                 prevSelectedPosition = i;
                 selectedDay = c;
             }
         });
 
+    }
+    public void setOnDayClickListner(dayClickListner listner)
+    {
+        this.dayClickListner =  listner;
     }
 
     private void highlightSelection(View view)
@@ -174,7 +193,6 @@ public class CalenderView extends LinearLayout
             {
                 Calendar c = (Calendar) adapterView.getItemAtPosition(i);
                 Log.i(TAG, "Clicked on " + sdf2.format(c.getTime()) + " at position " + i);
-                dataPasser.dayClicked(c);
                 highlightSelection(view);
                 prevSelectedDay = c.get(Calendar.DAY_OF_MONTH);
                 prevSelectedPosition = i;
@@ -205,7 +223,6 @@ public class CalenderView extends LinearLayout
                 Calendar c2 = Calendar.getInstance();
                 Log.i(TAG, "Clicked on " + sdf2.format(c.getTime()) + " at position " + i);
                 highlightSelection(view);
-                dataPasser.dayClicked(c);
                 prevSelectedDay = c.get(Calendar.DAY_OF_MONTH);
                 prevSelectedPosition = i;
                 selectedDay = c;
