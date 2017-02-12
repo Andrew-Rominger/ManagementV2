@@ -23,7 +23,7 @@ public class TaskFragment extends Fragment
 {
     Spinner sortSpinner;
     FloatingActionButton fab;
-
+    RecyclerView recyclerView;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -37,6 +37,7 @@ public class TaskFragment extends Fragment
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.sortOptions, R.layout.simplespinnerlayout);
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         sortSpinner.setAdapter(adapter);
+        recyclerView = (RecyclerView) view.findViewById(R.id.taskListRecycler);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

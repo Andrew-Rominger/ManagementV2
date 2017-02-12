@@ -16,10 +16,13 @@ import android.widget.Toast;
 
 import com.management.BaseClasses.DataBaseClasses.Task;
 import com.management.sqldatabase.DbTaskHelper;
+import com.management.sqldatabase.SqlTaskContract;
 
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+
 
 import static com.management.sqldatabase.SqlTaskContract.FeedTasks.*;
 
@@ -109,6 +112,7 @@ public class Utilities
         cv.put(COLUMN_END_DATE_YEAR, task.getEndDateYear());
         cv.put(COLUMN_START_DATE_MS, task.getStartDateMS());
         cv.put(COLUMN_END_DATE_MS, task.getEndDateMS());
+        cv.put(COLUMN_DATE_CREATED, task.getDateCreated());
 
         try{
             db.insert(TABLE_NAME, null, cv);
@@ -128,6 +132,55 @@ public class Utilities
             Toast.makeText(c, "Task created", Toast.LENGTH_LONG).show();
 
         }
+    }
+    public static ArrayList<Calendar> getDaysWithTasks(Context c, int sortBy)
+    {
+        DbTaskHelper dbHelper = new DbTaskHelper(c);
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String[] projection = {
+                _ID,
+                COLUMN_START_DATE_MS,
+                COLUMN_END_DATE_MS
+        };
+        String sortByS = null;
+        switch (sortBy)
+        {
+            case 0:
+                sortByS = COLUMN_START_DATE_MS + " ASC";
+                break;
+            case 1:
+                sortByS = COLUMN_END_DATE_MS + " ASC";
+                break;
+        }
+        Cursor cursor = db.query(TABLE_NAME, projection, null, null, null, null, sortByS);
+        ArrayList<Calendar> calendars = new ArrayList<>();
+        cursor.moveToFirst();
+        switch (sortBy)
+        {
+            case 0:
+                while(!cursor.isAfterLast())
+                {
+                    calendars.add(makeCalendar(cursor.getLong(cursor.getColumnIndex(COLUMN_START_DATE_MS))));
+                    cursor.moveToNext();
+                }
+                break;
+            case 1:
+                    while (!cursor.isAfterLast())
+                    {
+                        calendars.add(makeCalendar(cursor.getLong(cursor.getColumnIndex(COLUMN_END_DATE_MS))));
+                        cursor.moveToNext();
+                    }
+                break;
+
+        }
+        return calendars;
+
+    }
+
+    private static Calendar makeCalendar(long aLong) {
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(aLong);
+        return c;
     }
 }
 

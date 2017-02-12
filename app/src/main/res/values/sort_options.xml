@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="sortOptions">
-        <item>Date Created</item>
-        <item>Date Ascending</item>
-        <item>Date Descending</item>
+        <item>Start Date</item>
+        <item>End Date</item>
         <item>Title</item>
         <item>Urgency</item>
     </string-array>

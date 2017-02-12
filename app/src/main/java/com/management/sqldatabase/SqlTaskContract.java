@@ -34,6 +34,7 @@ public class SqlTaskContract {
         public static final String COLUMN_END_DATE_YEAR = "endDateYear";
         public static final String COLUMN_START_DATE_MS = "startDateMS";
         public static final String COLUMN_END_DATE_MS = "endDateMS";
+        public static final String COLUMN_DATE_CREATED = "dateCreated";
 
 
         //Urgency Levels

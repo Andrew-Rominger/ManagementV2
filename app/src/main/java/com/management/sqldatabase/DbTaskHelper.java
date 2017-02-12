@@ -36,7 +36,8 @@ public class DbTaskHelper extends SQLiteOpenHelper {
                     SqlTaskContract.FeedTasks.COLUMN_END_DATE_MONTH + INT_TYPE + COMMA_SEP +
                     SqlTaskContract.FeedTasks.COLUMN_END_DATE_YEAR + INT_TYPE + COMMA_SEP +
                     SqlTaskContract.FeedTasks.COLUMN_START_DATE_MS + INT_TYPE + COMMA_SEP +
-                    SqlTaskContract.FeedTasks.COLUMN_END_DATE_MS + INT_TYPE  +" )";
+                    SqlTaskContract.FeedTasks.COLUMN_END_DATE_MS + INT_TYPE  + COMMA_SEP +
+                    SqlTaskContract.FeedTasks.COLUMN_DATE_CREATED + INT_TYPE + " )";
 
     public DbTaskHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

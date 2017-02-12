@@ -31,6 +31,15 @@ public class Task
     private int urgency;
     private int startDateMS;
     private int endDateMS;
+    private int dateCreated;
+
+    public int getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(int dateCreated) {
+        this.dateCreated = dateCreated;
+    }
 
     public Calendar getEndDate() {
         return endDate;

@@ -130,6 +130,8 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
 
     private void makeTask()
     {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.SECOND, 0);
         startTimeC.set(Calendar.SECOND, 0);
         endTimeC.set(Calendar.SECOND, 0);
         Task task = new Task();
@@ -143,6 +145,7 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
         task.setIsComplete(0);
         task.setStartDateMS((int) startTimeC.getTimeInMillis());
         task.setEndDateMS((int) endTimeC.getTimeInMillis());
+        task.setDateCreated((int) c.getTimeInMillis());
         Utilities.saveTask(this, task);
         this.finish();
 
