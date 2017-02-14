@@ -8,5 +8,5 @@ import java.util.Calendar;
 
 public interface CalendarFragmentDataPasser
 {
-    void passData(Calendar calendar);
+    void passDate(Calendar calendar);
 }

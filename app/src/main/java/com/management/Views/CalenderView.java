@@ -190,6 +190,7 @@ public class CalenderView extends LinearLayout
                 Calendar c = (Calendar) adapterView.getItemAtPosition(i);
                 Log.i(TAG, "Clicked on " + sdf2.format(c.getTime()) + " at position " + i);
                 highlightSelection(view);
+                dayClickListner.onDayClicked(c);
                 prevSelectedDay = c.get(Calendar.DAY_OF_MONTH);
                 prevSelectedPosition = i;
                 selectedDay = c;
@@ -216,9 +217,9 @@ public class CalenderView extends LinearLayout
             {
 
                 Calendar c = (Calendar) adapterView.getItemAtPosition(i);
-                Calendar c2 = Calendar.getInstance();
                 Log.i(TAG, "Clicked on " + sdf2.format(c.getTime()) + " at position " + i);
                 highlightSelection(view);
+                dayClickListner.onDayClicked(c);
                 prevSelectedDay = c.get(Calendar.DAY_OF_MONTH);
                 prevSelectedPosition = i;
                 selectedDay = c;

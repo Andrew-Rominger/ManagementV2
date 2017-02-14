@@ -5,11 +5,8 @@ package com.management.Activities;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
+import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
@@ -19,98 +16,90 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.management.BaseClasses.DataBaseClasses.Task;
 import com.management.Fragments.TimeSelectorFragment;
 import com.management.Fragments.calendarFragment;
 import com.management.R;
+import com.management.TaskCreatedBroadcaster;
 import com.management.Utilities;
+import com.management.Views.CalenderView;
 import com.management.interfaces.CalendarFragmentDataPasser;
+import com.management.interfaces.CreateTaskListner;
+import com.management.interfaces.IcalendarViewScroll;
 import com.management.interfaces.ItimeSelector;
-import com.management.sqldatabase.DbTaskHelper;
-import com.management.sqldatabase.SqlTaskContract;
 import com.thebluealliance.spectrum.SpectrumDialog;
-import static com.management.sqldatabase.SqlTaskContract.FeedTasks.*;
+import static com.management.sqldatabase.SqlContract.FeedTasks.*;
 
 import java.util.Calendar;
 import java.util.Random;
 
 
-public class AddTask extends AppCompatActivity implements CalendarFragmentDataPasser, ItimeSelector
-{
+public class AddTask extends AppCompatActivity implements CalendarFragmentDataPasser, ItimeSelector, AdapterView.OnItemSelectedListener, IcalendarViewScroll {
     private static final String TAG = AddTask.class.getSimpleName();
 
-    Calendar startTimeC = Calendar.getInstance();
-    Calendar endTimeC = Calendar.getInstance();
-    Calendar startDateC = Calendar.getInstance();
-    Calendar endDateC = Calendar.getInstance();
-
+    int urgency = URGANCY_LOW;
     @ColorRes int color;
     int index;
     Random rand = new Random();
 
-
-
     LinearLayout startDateTouchTarget;
     LinearLayout startTimeTouchTarget;
-    LinearLayout endDateTouchTarget;
-    LinearLayout endTimeTouchTarget;
     LinearLayout colorChangeTouchTarget;
+    LinearLayout urgencyFieldBackground;
 
     FrameLayout startTimeFragmentHolder;
     FrameLayout startDateFragmentHolder;
-    FrameLayout endTimeFragmentHolder;
-    FrameLayout endDateFragmentHolder;
 
     TextView title;
     TextView description;
     TextView startDateDisplay;
-    TextView endDateDisplay;
     TextView startTimeDisplay;
-    TextView endTimeDisplay;
+
+    EditText taskLengthDisplay;
 
     View startDateUnderbar;
     View startTimeUnderbar;
-    View endDateUnderbar;
-    View endTimeUnderbar;
+
+    Spinner urgencySpinner;
 
     Toolbar toolbar;
 
     calendarFragment startDateFragment;
-    calendarFragment endDateFragment;
     TimeSelectorFragment startTimeFragment;
-    TimeSelectorFragment endTimeFragment;
 
     TaskLayoutManager manager;
 
-
-    boolean isStartTimeOpen = false;
-    boolean isEndTimeOpen = false;
-    boolean isStartDateOpen = false;
-    boolean isEndDateOpen = false;
+    Calendar selection;
 
     @Override
-    public void passData(Calendar calendar)
+    public void passDate(Calendar calendar)
     {
-        Log.d(TAG, "Activity got calendar");
-        if(manager.getIndex() == 0) {
-            startDateDisplay.setText(Utilities.MonthDayYearsdf.format(calendar.getTime()));
-            startDateC = calendar;
-        }
-        else if(manager.getIndex() == 2)
-        {
-            endDateDisplay.setText(Utilities.MonthDayYearsdf.format(calendar.getTime()));
-            endDateC = calendar;
-        }
+        selection.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
+        selection.set(Calendar.MONTH, calendar.get(Calendar.MONTH));
+        selection.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH));
+        startDateDisplay.setText(Utilities.MonthDayYearsdf.format(selection.getTime()));
+        manager.close();
+    }
+    @Override
+    public void passTime(Calendar calendar)
+    {
+        selection.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY));
+        selection.set(Calendar.MINUTE, calendar.get(Calendar.HOUR_OF_DAY));
+        startTimeDisplay.setText(Utilities.justTime.format(selection.getTime()));
         manager.close();
     }
 
@@ -122,7 +111,6 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
             case R.id.action_save:
                 makeTask();
                 return true;
-
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -130,25 +118,20 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
 
     private void makeTask()
     {
-        Calendar c = Calendar.getInstance();
-        c.set(Calendar.SECOND, 0);
-        startTimeC.set(Calendar.SECOND, 0);
-        endTimeC.set(Calendar.SECOND, 0);
-        Task task = new Task();
-        task.setColor(color);
-        task.setDescription(description.getText().toString());
-        task.setTitle(title.getText().toString());
-        task.setStartTimeM(startTimeC.get(Calendar.MINUTE));
-        task.setStartTimeH(startTimeC.get(Calendar.HOUR));
-        task.setEndTimeM(endTimeC.get(Calendar.MINUTE));
-        task.setEndTimeH(endTimeC.get(Calendar.HOUR));
-        task.setIsComplete(0);
-        task.setStartDateMS((int) startTimeC.getTimeInMillis());
-        task.setEndDateMS((int) endTimeC.getTimeInMillis());
-        task.setDateCreated((int) c.getTimeInMillis());
-        Utilities.saveTask(this, task);
+        Utilities.makeTask(
+                title.getText().toString(),
+                description.getText().toString(),
+                color,
+                selection.get(Calendar.DAY_OF_MONTH),
+                selection.get(Calendar.MONTH),
+                selection.get(Calendar.YEAR),
+                Utilities.parseLength(taskLengthDisplay.getText().toString()),
+                this,
+                urgency,
+                Utilities.parseLength(taskLengthDisplay.getText().toString())
+        );
+        TaskCreatedBroadcaster.broadcast();
         this.finish();
-
     }
 
     @Override
@@ -158,46 +141,52 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
         inflater.inflate(R.menu.add_task_save, menu);
         return super.onCreateOptionsMenu(menu);
     }
-
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_task);
 
         toolbar = (Toolbar) findViewById(R.id.addTaskToolbar);
 
+        selection = Calendar.getInstance();
+        selection.set(Calendar.SECOND, 0);
+        selection.set(Calendar.MILLISECOND, 0);
+
         startDateTouchTarget = (LinearLayout) findViewById(R.id.StartDateTouchTarget);
         startTimeTouchTarget = (LinearLayout) findViewById(R.id.StartTimeTouchTarget);
-        endDateTouchTarget = (LinearLayout) findViewById(R.id.EndDateTouchTarget);
-        endTimeTouchTarget = (LinearLayout) findViewById(R.id.EndTimeTouchTarget);
         colorChangeTouchTarget = (LinearLayout) findViewById(R.id.colorChangeTouchTarget);
+        urgencyFieldBackground = (LinearLayout) findViewById(R.id.LL_urgencyFieldBackground);
 
 
         startTimeFragmentHolder = (FrameLayout) findViewById(R.id.startTimeFragmentHolder);
         startDateFragmentHolder = (FrameLayout) findViewById(R.id.startDateFragmentHolder);
-        endTimeFragmentHolder = (FrameLayout) findViewById(R.id.endTimeFragmentHolder);
-        endDateFragmentHolder = (FrameLayout) findViewById(R.id.endDateFragmentHolder);
-
 
         title = (EditText) findViewById(R.id.taskAddTitle);
         description = (EditText) findViewById(R.id.taskAddDescription);
+        taskLengthDisplay = (EditText) findViewById(R.id.taskLengthInput);
 
         startDateDisplay = (TextView) findViewById(R.id.startDateDisplay);
-        endDateDisplay = (TextView) findViewById(R.id.endDateDisplay);
         startTimeDisplay = (TextView) findViewById(R.id.startTimeDisplay);
-        endTimeDisplay = (TextView) findViewById(R.id.endTimeDisplay);
 
-
+        urgencySpinner = (Spinner) findViewById(R.id.addTaskUrgencySpinner);
 
         startDateUnderbar = findViewById(R.id.startDateDivider);
-        endDateUnderbar= findViewById(R.id.endDateDivider);
         startTimeUnderbar= findViewById(R.id.startTimeDivider);
-        endTimeUnderbar = findViewById(R.id.endTimeDivider);
 
 
         index = rand.nextInt(20);
         Log.d(TAG, "Color resource: " + Utilities.colorArray[index] + ", Array index: " + index);
         toolbar.setBackgroundColor(ContextCompat.getColor(this,Utilities.colorArray[index]));
+        color = Utilities.colorArray[index];
         setSupportActionBar(toolbar);
         ActionBar bar = getSupportActionBar();
         assert bar != null;
@@ -205,7 +194,9 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
         bar.setHomeButtonEnabled(true);
 
         manager = new TaskLayoutManager(this);
-
+        ArrayAdapter <CharSequence> SpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.urgencyOptions, R.layout.simplespinnerlayout);
+        SpinnerAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        urgencySpinner.setAdapter(SpinnerAdapter);
         colorChangeTouchTarget.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -251,12 +242,12 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
                 dialog.show(getSupportFragmentManager(), "Pick Color");
             }
         });
+        urgencySpinner.setOnItemSelectedListener(this);
         startDateTouchTarget.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                Log.d(TAG, "start date tapped");
                 if(startDateFragment == null)
                 {
                     startDateFragment = new calendarFragment();
@@ -265,69 +256,59 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
                 manager.updateDisplay(startDateFragment,0);
             }
         });
-        endDateTouchTarget.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-                Log.d(TAG, "end date tapped");
-                if(endDateFragment == null)
-                {
-                    endDateFragment = new calendarFragment();
-                }
-                Utilities.hideSoftKeyboard(AddTask.this);
-                manager.updateDisplay(endDateFragment,2);
-            }
-        });
-        endTimeTouchTarget.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-                Log.d(TAG, "end time tapped");
-                if(endTimeFragment == null)
-                {
-                    endTimeFragment = new TimeSelectorFragment();
-                }
-                Utilities.hideSoftKeyboard(AddTask.this);
-                manager.updateDisplay(endTimeFragment, 3);
-
-            }
-        });
         startTimeTouchTarget.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
-                Log.d(TAG, "start time tapped");
                 if(startTimeFragment == null)
                 {
                     startTimeFragment = new TimeSelectorFragment();
                 }
                 Utilities.hideSoftKeyboard(AddTask.this);
                 manager.updateDisplay(startTimeFragment, 1);
-
             }
         });
     }
 
-    @Override
-    public void passTime(Calendar c)
-    {
-        Log.d(TAG, "isStartTimeOpen: " + isStartTimeOpen + ", isEndTimeOpen: " + isEndTimeOpen);
-        if(manager.getIndex() == 1)
-        {
-            startTimeC = c;
-            startTimeDisplay.setText(Utilities.justTime.format(c.getTime()));
-        }
-        else if(manager.getIndex() == 3)
-        {
-            endTimeC = c;
-            endTimeDisplay.setText(Utilities.justTime.format(c.getTime()));
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+    {
+        switch((String) urgencySpinner.getItemAtPosition(position))
+        {
+            case "Low":
+                urgency = URGANCY_LOW;
+                urgencyFieldBackground.setBackgroundColor(ContextCompat.getColor(AddTask.this, URGANCY_LOW_COLOR));
+                ((TextView) parent.getChildAt(0)).setTextColor(ContextCompat.getColor(AddTask.this, URGANCY_LOW_COLOR));
+                break;
+            case "Medium":
+                urgency = URGANCY_MED;
+                urgencyFieldBackground.setBackgroundColor(ContextCompat.getColor(AddTask.this, URGANCY_MED_COLOR));
+                ((TextView) parent.getChildAt(0)).setTextColor(ContextCompat.getColor(AddTask.this, URGANCY_MED_COLOR));
+                break;
+            case "High":
+                urgency = URGANCY_HIGH;
+                urgencyFieldBackground.setBackgroundColor(ContextCompat.getColor(AddTask.this, URGANCY_HIGH_COLOR));
+                ((TextView) parent.getChildAt(0)).setTextColor(ContextCompat.getColor(AddTask.this, URGANCY_HIGH_COLOR));
         }
-        manager.close();
     }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent)
+    {
+
+    }
+
+    @Override
+    public void done()
+    {
+
+    }
+
     public class TaskLayoutManager
     {
         private Fragment shownFragment;
+        int toScroll;
         Context context;
         FragmentManager fragmentManger;
         private int index;
@@ -342,58 +323,44 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
             fragmentManger = getFragmentManager();
             shownFragment = null;
         }
-        void updateDisplay(Fragment fragment, int index)
+        void updateDisplay(Fragment fragment, int index2)
         {
             if(fragment.equals(shownFragment))
             {
                 close();
                 return;
             }
-            this.index = index;
+            this.index = index2;
             if(fragment instanceof calendarFragment)
             {
-                switch (index)
-                {
-                    case 0:
-                        openStartDateFragment(fragment);
-                        break;
-                    case 2:
-                        openEndDateFragment(fragment);
-                }
+
+                openStartDateFragment((calendarFragment) fragment);
+
+
             }else if(fragment instanceof TimeSelectorFragment)
             {
-                switch (index)
-                {
-                    case 1:
-                        openStartTimeFragment(fragment);
-                        break;
-                    case 3:
-                        openEndTimeFragment(fragment);
-                }
+
+
+                openStartTimeFragment((TimeSelectorFragment) fragment);
+
+
             }
         }
 
-        private void openEndTimeFragment(Fragment fragment)
-        {
-            openFragment(fragment, endTimeFragmentHolder);
-        }
-
-        private void openStartTimeFragment(Fragment fragment)
+        private void openStartTimeFragment(TimeSelectorFragment fragment)
         {
             openFragment(fragment, startTimeFragmentHolder);
+            toScroll = 1;
         }
 
-        private void openEndDateFragment(Fragment fragment)
-        {
-            openFragment(fragment, endDateFragmentHolder);
-        }
 
-        private void openStartDateFragment(Fragment fragment)
+        private void openStartDateFragment(calendarFragment fragment)
         {
             openFragment(fragment, startDateFragmentHolder);
+            toScroll = 0;
         }
 
-        private void close()
+        public void close()
         {
             if(shownFragment == null)
             {

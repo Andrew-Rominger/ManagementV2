@@ -15,29 +15,22 @@ public class DbTaskHelper extends SQLiteOpenHelper {
     private static final String TEXT_TYPE = " TEXT";
     private static final String COMMA_SEP = " ,";
     private static final String INT_TYPE = " INTEGER";
-    private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + SqlTaskContract.FeedTasks.TABLE_NAME;
+    private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + SqlContract.FeedTasks.TABLE_NAME;
 
     private static final String SQL_CREATE_ENTRIES =
-            "CREATE TABLE " + SqlTaskContract.FeedTasks.TABLE_NAME + " (" +
-                    SqlTaskContract.FeedTasks._ID + " INTEGER PRIMARY KEY," +
-                    SqlTaskContract.FeedTasks.COLUMN_TASK_NAME + TEXT_TYPE  + COMMA_SEP +
-                    SqlTaskContract.FeedTasks.COLUMN_DESCRIPTION + TEXT_TYPE  + COMMA_SEP +
-                    SqlTaskContract.FeedTasks.COLUMN_END_TIME_H + INT_TYPE  + COMMA_SEP +
-                    SqlTaskContract.FeedTasks.COLUMN_URGANCY + INT_TYPE  + COMMA_SEP +
-                    SqlTaskContract.FeedTasks.COLUMN_END_TIME_M + INT_TYPE + COMMA_SEP +
-                    SqlTaskContract.FeedTasks.COLUMN_START_TIME_H + INT_TYPE + COMMA_SEP +
-                    SqlTaskContract.FeedTasks.COLUMN_START_TIME_M + INT_TYPE + COMMA_SEP +
-                    SqlTaskContract.FeedTasks.COLUMN_COLOR + INT_TYPE + COMMA_SEP +
-                    SqlTaskContract.FeedTasks.COLUMN_IS_COMPLETE + INT_TYPE + COMMA_SEP +
-                    SqlTaskContract.FeedTasks.COLUMN_START_DATE_DAY + INT_TYPE + COMMA_SEP +
-                    SqlTaskContract.FeedTasks.COLUMN_START_DATE_MONTH + INT_TYPE + COMMA_SEP +
-                    SqlTaskContract.FeedTasks.COLUMN_START_DATE_YEAR + INT_TYPE + COMMA_SEP +
-                    SqlTaskContract.FeedTasks.COLUMN_END_DATE_DAY + INT_TYPE + COMMA_SEP +
-                    SqlTaskContract.FeedTasks.COLUMN_END_DATE_MONTH + INT_TYPE + COMMA_SEP +
-                    SqlTaskContract.FeedTasks.COLUMN_END_DATE_YEAR + INT_TYPE + COMMA_SEP +
-                    SqlTaskContract.FeedTasks.COLUMN_START_DATE_MS + INT_TYPE + COMMA_SEP +
-                    SqlTaskContract.FeedTasks.COLUMN_END_DATE_MS + INT_TYPE  + COMMA_SEP +
-                    SqlTaskContract.FeedTasks.COLUMN_DATE_CREATED + INT_TYPE + " )";
+            "CREATE TABLE " + SqlContract.FeedTasks.TABLE_NAME + " (" +
+                    SqlContract.FeedTasks._ID + " INTEGER PRIMARY KEY," +
+                    SqlContract.FeedTasks.COLUMN_TASK_NAME + TEXT_TYPE  + COMMA_SEP +
+                    SqlContract.FeedTasks.COLUMN_DESCRIPTION + TEXT_TYPE  + COMMA_SEP +
+                    SqlContract.FeedTasks.COLUMN_URGANCY + INT_TYPE  + COMMA_SEP +
+                    SqlContract.FeedTasks.COLUMN_COLOR + INT_TYPE + COMMA_SEP +
+                    SqlContract.FeedTasks.COLUMN_IS_COMPLETE + INT_TYPE + COMMA_SEP +
+                    SqlContract.FeedTasks.COLUMN_DAY + INT_TYPE + COMMA_SEP +
+                    SqlContract.FeedTasks.COLUMN_MONTH + INT_TYPE + COMMA_SEP +
+                    SqlContract.FeedTasks.COLUMN_YEAR + INT_TYPE + COMMA_SEP +
+                    SqlContract.FeedTasks.COLUMN_DAYID + INT_TYPE + COMMA_SEP +
+                    SqlContract.FeedTasks.COLUMN_LENGTH + INT_TYPE +
+                    " )";
 
     public DbTaskHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

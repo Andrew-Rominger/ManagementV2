@@ -4,8 +4,16 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/plus"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="16dp"
+        android:id="@+id/addTaskButton"/>
+
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -34,11 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/taskScr"
-            android:paddingBottom="4dp"
             >
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -46,20 +50,11 @@
                     >
                     <android.support.v7.widget.RecyclerView
                         android:layout_width="match_parent"
-                        android:layout_marginTop="4dp"
                         android:layout_marginBottom="4dp"
                         android:layout_height="wrap_content"
                         android:id="@+id/taskListRecycler"
                         android:elevation="4dp" />
                 </LinearLayout>
-            </RelativeLayout>
         </android.support.v4.widget.NestedScrollView>
     </LinearLayout>
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/plus"
-        android:layout_gravity="bottom|right"
-        android:layout_margin="16dp"
-        android:id="@+id/addTaskButton"/>
 </android.support.design.widget.CoordinatorLayout>

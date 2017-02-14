@@ -8,5 +8,18 @@
         android:id="@+id/settings"
         android:title="Settings"
         />
+    <item
+        android:id="@+id/deleteAllTasks"
+        android:title="Delete All Tasks"
+        />
+    <item
+        android:id="@+id/printAllTasks"
+        android:title="Print All Tasks"
+        />
+    <item
+        android:id="@+id/printAllDays"
+        android:title="Print All Days"
+        />
+
 
 </menu>

@@ -17,7 +17,8 @@
 
     <ScrollView
         android:layout_height="wrap_content"
-        android:layout_width="match_parent">
+        android:layout_width="match_parent"
+        android:id="@+id/addTaskMainView">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -95,6 +96,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
+                        android:textSize="18sp"
                         android:hint="Start Date"
                         android:background="@android:color/white"
                         android:id="@+id/startDateDisplay" />
@@ -127,6 +129,7 @@
                         android:layout_width="wrap_content"
                         android:gravity="center_vertical"
                         android:background="@android:color/white"
+                        android:textSize="18sp"
                         android:layout_height="match_parent"
                         android:hint="Start Time"
                         android:id="@+id/startTimeDisplay"/>
@@ -142,36 +145,10 @@
                 android:background="@color/colorGreyLight"
                     android:id="@+id/startTimeDivider"/>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="72dp"
-                    android:id="@+id/EndDateTouchTarget">
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginRight="16dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_height="24dp"
-                        android:src="@drawable/calendar_check"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical"
-                        android:hint="End Date"
-                        android:background="@android:color/white"
-                        android:id="@+id/endDateDisplay" />
-                </LinearLayout>
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/endDateFragmentHolder"/>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/colorGreyLight"
-                    android:id="@+id/endDateDivider"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -189,11 +166,14 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:hint="End Time"
+                        android:hint="Task Length"
                         android:gravity="center_vertical"
+                        android:textSize="18sp"
+                        android:textColor="@android:color/black"
                         android:background="@android:color/white"
                         android:layout_weight=".5"
-                        android:id="@+id/endTimeDisplay" />
+                        android:inputType="time"
+                        android:id="@+id/taskLengthInput" />
                 </LinearLayout>
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -204,6 +184,31 @@
                 android:layout_height="1dp"
                 android:background="@color/colorGreyLight"
                 android:id="@+id/endTimeDivider"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="72dp"
+                    android:orientation="horizontal"
+                    android:id="@+id/LL_urgencyFieldBackground">
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/speedometer"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="Urgency"
+                        android:gravity="center_vertical" />
+                    <Spinner
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:id="@+id/addTaskUrgencySpinner"
+                        />
+                </LinearLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"

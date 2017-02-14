@@ -18,6 +18,7 @@ import com.management.Listners.timeSelectorListner;
 import com.management.R;
 import com.management.Utilities;
 import com.management.Views.TimeSelecterView;
+import com.management.interfaces.IcalendarViewScroll;
 import com.management.interfaces.ItimeSelector;
 
 import java.util.Calendar;
@@ -30,8 +31,19 @@ public class TimeSelectorFragment extends Fragment
 {
     private static final String TAG = TimeSelectorFragment.class.getSimpleName();
     TimeSelecterView timeSelecterView;
-    Calendar startTime;
+    Calendar selectedTime;
     Calendar endTime;
+    IcalendarViewScroll scroll;
+
+    public TimeSelecterView getTimeSelecterView() {
+        return timeSelecterView;
+    }
+
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+    }
 
     ItimeSelector timeSelector;
     @Nullable
@@ -46,6 +58,7 @@ public class TimeSelectorFragment extends Fragment
     {
         super.onAttach(context);
         timeSelector = (ItimeSelector) context;
+        scroll = (IcalendarViewScroll) context;
     }
 
     @Override
@@ -59,7 +72,7 @@ public class TimeSelectorFragment extends Fragment
             @Override
             public void timePass(Calendar calendar)
             {
-                startTime = calendar;
+                selectedTime = calendar;
                 Log.d(TAG, "Fragment recived time: " + Utilities.justTime.format(calendar.getTime()));
                 timeSelector.passTime(calendar);
             }

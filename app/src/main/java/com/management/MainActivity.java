@@ -24,8 +24,11 @@ import com.management.Fragments.HomeFragment;
 import com.management.Fragments.TaskFragment;
 import com.management.Fragments.calendarFragment;
 import com.management.Fragments.scheduleFragment;
+import com.management.interfaces.CreateTaskListner;
 
-public class MainActivity extends AppCompatActivity
+import java.util.Calendar;
+
+public class MainActivity extends AppCompatActivity implements com.management.interfaces.CalendarFragmentDataPasser, CreateTaskListner
 {
     Toolbar toolbar;
     DrawerLayout drawerLayout;
@@ -58,6 +61,22 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.settings:
                 break;
+            case R.id.deleteAllTasks:
+                Utilities.deleteAllTasks(this);
+                break;
+            case R.id.printAllTasks:
+                try {
+                    Utilities.printAllTasks(this);
+                } catch (Utilities.utilityDatabaseError utilityDatabaseError) {
+                    utilityDatabaseError.printStackTrace();
+                }
+                break;
+            case R.id.printAllDays:
+                try {
+                    Utilities.printAllDays(this);
+                } catch (Utilities.utilityDatabaseError utilityDatabaseError) {
+                    utilityDatabaseError.printStackTrace();
+                }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -66,7 +85,6 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
-
         toolbar = (Toolbar) findViewById(R.id.mainToolbar);
         drawerLayout = (DrawerLayout) findViewById(R.id.activity_mainDrawer);
         navList = (ListView) findViewById(R.id.navMenuList);
@@ -78,12 +96,12 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         ActionBar bar = getSupportActionBar();
-
+        Log.d(TAG, String.valueOf(Utilities.parseLength(":45")));
         fm = getFragmentManager();
         transaction = fm.beginTransaction();
         transaction.replace(R.id.contentHolder, new HomeFragment(), "homeFragment");
         transaction.commit();
-
+        TaskCreatedBroadcaster.Subscribe(this);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_nav, R.string.close_nav)
         {
             @Override
@@ -111,6 +129,17 @@ public class MainActivity extends AppCompatActivity
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         actionBarDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public void passDate(Calendar calendar) {
+
+    }
+
+    @Override
+    public void recieveBroadcast()
+    {
+        Log.e(TAG, "Recieved broadcast");
     }
 
     private class DrawerItemClickListener implements android.widget.AdapterView.OnItemClickListener

@@ -1,51 +1,82 @@
 package com.management.Fragments;
 
 import android.app.Fragment;
-import android.content.Intent;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
-
-import com.management.Activities.AddTask;
+import com.management.Adapter.HeaderAdapter;
+import com.management.BaseClasses.DataBaseClasses.Day;
+import com.management.BaseClasses.DataBaseClasses.Task;
+import com.management.BaseClasses.RecyclerHeader;
 import com.management.R;
+import com.management.TaskCreatedBroadcaster;
+import com.management.Utilities;
+import com.management.interfaces.CreateTaskListner;
+
+import java.util.ArrayList;
 
 /**
  * Created by Andrew on 2/9/2017.
  */
 
-public class TaskFragment extends Fragment
+public class TaskFragment extends Fragment implements CreateTaskListner
 {
-    Spinner sortSpinner;
-    FloatingActionButton fab;
-    RecyclerView recyclerView;
+    private static final String TAG = TaskFragment.class.getSimpleName();
+
+    RecyclerView mainList;
+    HeaderAdapter adapter;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
+        TaskCreatedBroadcaster.Subscribe(this);
         return inflater.inflate(R.layout.taskfragmentlayout, container, false);
     }
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        sortSpinner = (Spinner) view.findViewById(R.id.taskListSortOrder);
-        fab = (FloatingActionButton) view.findViewById(R.id.addTaskButton);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.sortOptions, R.layout.simplespinnerlayout);
-        adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-        sortSpinner.setAdapter(adapter);
-        recyclerView = (RecyclerView) view.findViewById(R.id.taskListRecycler);
+    public void onViewCreated(View view, Bundle savedInstanceState)
+    {
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-                startActivityForResult(new Intent(getActivity(), AddTask.class),0);
-            }
-        });
+        mainList = (RecyclerView) view.findViewById(R.id.taskListRecycler);
+        setupRec(view);
         super.onViewCreated(view, savedInstanceState);
+    }
+    private void setupRec(View view)
+    {
+        ArrayList<RecyclerHeader> list;
+        list = Utilities.getHeaders(view.getContext());
+        adapter = new HeaderAdapter(list, view.getContext());
+        Log.e(TAG, "Found " + list.size() + " headers");
+        for(RecyclerHeader h : list)
+        {
+            ArrayList<Task> tList = h.getDisplayedTasks();
+            for (Task t : tList)
+            {
+                t.printInfo();
+            }
+        }
+        mainList.setAdapter(adapter);
+        LinearLayoutManager manager = new LinearLayoutManager(view.getContext());
+        manager.setOrientation(LinearLayoutManager.VERTICAL);
+        mainList.setLayoutManager(manager);
+        mainList.setNestedScrollingEnabled(false);
+        mainList.setItemAnimator(new DefaultItemAnimator());
+    }
+    private void changeSort()
+    {
+
+    }
+
+    @Override
+    public void recieveBroadcast()
+    {
+        Log.d(TAG, "TaskFragment Recieved broadcast");
+        mainList.getAdapter().notifyDataSetChanged();
     }
 }

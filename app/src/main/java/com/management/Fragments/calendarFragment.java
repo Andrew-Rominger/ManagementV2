@@ -4,16 +4,15 @@ import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.management.Listners.dayClickListner;
 import com.management.R;
-import com.management.Utilities;
 import com.management.Views.CalenderView;
 import com.management.interfaces.CalendarFragmentDataPasser;
+import com.management.interfaces.IcalendarViewScroll;
 
 import java.util.Calendar;
 
@@ -22,8 +21,13 @@ public class calendarFragment extends Fragment
 {
     private static final String TAG = calendarFragment.class.getSimpleName();
     CalenderView calenderView;
+    IcalendarViewScroll viewScroll;
 
     CalendarFragmentDataPasser dataPasser;
+
+    public CalenderView getCalenderView() {
+        return calenderView;
+    }
 
     @Nullable
     @Override
@@ -41,9 +45,7 @@ public class calendarFragment extends Fragment
             @Override
             public void onDayClicked(Calendar c)
             {
-                dataPasser.passData(c);
-                Log.e(TAG, "day " + Utilities.MonthDayYearsdf.format(c.getTime()) + " clicked.");
-                super.onDayClicked(c);
+                dataPasser.passDate(c);
             }
         });
         super.onViewCreated(view, savedInstanceState);
@@ -54,11 +56,14 @@ public class calendarFragment extends Fragment
     {
         super.onAttach(context);
         dataPasser = (CalendarFragmentDataPasser) context;
+        viewScroll = (IcalendarViewScroll) context;
     }
 
-    void passData(Calendar startDate)
+    @Override
+    public void onStart()
     {
-        dataPasser.passData(startDate);
+        viewScroll.done();
+        super.onStart();
     }
 
 }

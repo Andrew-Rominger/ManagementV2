@@ -2,6 +2,7 @@ package com.management.Views;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -9,11 +10,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import com.management.BaseClasses.DataBaseClasses.Task;
 import com.management.Listners.timeSelectorListner;
 
 import com.management.R;
 import com.management.Utilities;
 
+import java.sql.Time;
 import java.util.Calendar;
 
 /**
@@ -22,6 +26,7 @@ import java.util.Calendar;
 
 public class TimeSelecterView extends LinearLayout
 {
+    private static final String TAG = TimeSelecterView.class.getSimpleName();
     ImageView minusTime;
     ImageView plusTime;
 
@@ -32,6 +37,8 @@ public class TimeSelecterView extends LinearLayout
     Button okButton;
 
     Calendar selectedTime;
+    int hour;
+    int minute;
 
     timeSelectorListner listner;
 
@@ -46,6 +53,8 @@ public class TimeSelecterView extends LinearLayout
     void setupView()
     {
         selectedTime = Calendar.getInstance();
+        hour = selectedTime.get(Calendar.HOUR);
+        minute = selectedTime.get(Calendar.MINUTE);
 
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.timeselecterlayout, this);
@@ -89,14 +98,31 @@ public class TimeSelecterView extends LinearLayout
             @Override
             public void onClick(View v)
             {
-                selectedTime.add(Calendar.HOUR, 1);
+                if(hour == 23)
+                {
+                    hour = 0;
+                }
+                else
+                {
+                    hour++;
+                }
+                selectedTime.set(Calendar.HOUR_OF_DAY, hour);
                 updateCalendars();
             }
         });
         minusTime.setOnClickListener(new OnClickListener() {
             @Override
-            public void onClick(View v) {
-                selectedTime.add(Calendar.HOUR, -1);
+            public void onClick(View v)
+            {
+                if(hour == 0)
+                {
+                    hour = 23;
+                }
+                else
+                {
+                    hour--;
+                }
+                selectedTime.set(Calendar.HOUR_OF_DAY, hour);
                 updateCalendars();
             }
         });

@@ -4,27 +4,26 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
-import android.graphics.Color;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
+import android.nfc.Tag;
 import android.util.Log;
-import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.management.BaseClasses.DataBaseClasses.Day;
 import com.management.BaseClasses.DataBaseClasses.Task;
+import com.management.BaseClasses.RecyclerHeader;
+import com.management.sqldatabase.DbDayHelper;
 import com.management.sqldatabase.DbTaskHelper;
-import com.management.sqldatabase.SqlTaskContract;
+import com.management.sqldatabase.SqlContract;
 
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
 
-import static com.management.sqldatabase.SqlTaskContract.FeedTasks.*;
+import static com.management.sqldatabase.SqlContract.FeedTasks.*;
 
 
 /**
@@ -87,100 +86,302 @@ public class Utilities
         return arr;
 
     }
-    public static void saveTask(Context c, Task task)
+    private static Calendar makeCalendar(int day, int month, int year)
     {
-        SQLiteException exception = null;
-
-        DbTaskHelper th = new DbTaskHelper(c);
-        SQLiteDatabase db = th.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-
-        cv.put(COLUMN_TASK_NAME, task.getTitle());
-        cv.put(COLUMN_DESCRIPTION, task.getDescription());
-        cv.put(COLUMN_END_TIME_H, task.getEndTimeH());
-        cv.put(COLUMN_END_TIME_M, task.getEndTimeM());
-        cv.put(COLUMN_START_TIME_H, task.getStartTimeH());
-        cv.put(COLUMN_START_TIME_M, task.getStartTimeM());
-        cv.put(COLUMN_COLOR, task.getColor());
-        cv.put(COLUMN_IS_COMPLETE, task.getIsComplete());
-        cv.put(COLUMN_URGANCY, task.getUrgency());
-        cv.put(COLUMN_START_DATE_DAY, task.getStartDateDay());
-        cv.put(COLUMN_START_DATE_MONTH, task.getStartDateMonth());
-        cv.put(COLUMN_START_DATE_YEAR, task.getStartDateYear());
-        cv.put(COLUMN_END_DATE_DAY, task.getEndDateDay());
-        cv.put(COLUMN_END_DATE_MONTH, task.getEndDateMonth());
-        cv.put(COLUMN_END_DATE_YEAR, task.getEndDateYear());
-        cv.put(COLUMN_START_DATE_MS, task.getStartDateMS());
-        cv.put(COLUMN_END_DATE_MS, task.getEndDateMS());
-        cv.put(COLUMN_DATE_CREATED, task.getDateCreated());
-
-        try{
-            db.insert(TABLE_NAME, null, cv);
-        }
-        catch (SQLiteException e)
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.YEAR, year);
+        c.set(Calendar.MONTH, month);
+        c.set(Calendar.DAY_OF_MONTH, day);
+        return c;
+    }
+    public static String getFormatedDescription(String description)
+    {
+        if(description.contains("\n"))
         {
-            exception = e;
-            Log.e(TAG, "Failed to insert into database: "  + e.getMessage());
+            String finals = "";
+            char[] arr = description.toCharArray();
+            for(int i =0;i<arr.length;i++)
+            {
+                if(arr[i] == '\n')
+                {
+                    finals = description.substring(0, i) + "...";
+                    break;
+                }
+            }
+            return finals;
         }
-        db.close();
-        if(exception != null)
+        else if(description.length() > 30)
         {
-            Toast.makeText(c, "Task failed to be created", Toast.LENGTH_LONG).show();
+            return  description.substring(0,30) + "...";
         }
         else
         {
-            Toast.makeText(c, "Task created", Toast.LENGTH_LONG).show();
-
+            return description;
         }
     }
-    public static ArrayList<Calendar> getDaysWithTasks(Context c, int sortBy)
+    public static void deleteAllTasks(Activity a)
     {
-        DbTaskHelper dbHelper = new DbTaskHelper(c);
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String[] projection = {
-                _ID,
-                COLUMN_START_DATE_MS,
-                COLUMN_END_DATE_MS
-        };
-        String sortByS = null;
-        switch (sortBy)
+        Toast.makeText(a, "Deleting all tasks", Toast.LENGTH_LONG).show();
+        DbTaskHelper helper = new DbTaskHelper(a);
+        SQLiteDatabase db = helper.getWritableDatabase();
+        db.delete(TABLE_NAME, null, null);
+        db.close();
+        DbDayHelper helper1 = new DbDayHelper(a);
+        SQLiteDatabase db2 = helper1.getWritableDatabase();
+        db2.delete(SqlContract.FeedDays.TABLE_NAME, null,null);
+        db2.close();
+    }
+
+    public static ArrayList<Task> getAllTasks(Context context) throws utilityDatabaseError {
+        ArrayList<Task> List = new ArrayList<>();
+        DbTaskHelper helper = new DbTaskHelper(context);
+        SQLiteDatabase database = helper.getReadableDatabase();
+        Cursor cursor = database.query(
+                SqlContract.FeedTasks.TABLE_NAME,
+                SqlContract.getColumnsTask(),
+                null,
+                null,
+                null,
+                null,
+                SqlContract.FeedTasks.sortOrder
+        );
+        if(cursor.getCount() < 1)
         {
-            case 0:
-                sortByS = COLUMN_START_DATE_MS + " ASC";
-                break;
-            case 1:
-                sortByS = COLUMN_END_DATE_MS + " ASC";
-                break;
+            throw new utilityDatabaseError("No Tasks found");
         }
-        Cursor cursor = db.query(TABLE_NAME, projection, null, null, null, null, sortByS);
-        ArrayList<Calendar> calendars = new ArrayList<>();
         cursor.moveToFirst();
-        switch (sortBy)
+        while (!cursor.isAfterLast())
         {
-            case 0:
-                while(!cursor.isAfterLast())
-                {
-                    calendars.add(makeCalendar(cursor.getLong(cursor.getColumnIndex(COLUMN_START_DATE_MS))));
-                    cursor.moveToNext();
-                }
-                break;
-            case 1:
-                    while (!cursor.isAfterLast())
-                    {
-                        calendars.add(makeCalendar(cursor.getLong(cursor.getColumnIndex(COLUMN_END_DATE_MS))));
-                        cursor.moveToNext();
-                    }
-                break;
+            List.add(new Task(cursor));
+            cursor.moveToNext();
+        }
+        return List;
+    }
+    public static ArrayList<Day> getAllDays(Context context) throws utilityDatabaseError {
+    ArrayList<Day> Days = new ArrayList<>();
+    DbDayHelper helper = new DbDayHelper(context);
+    SQLiteDatabase database = helper.getReadableDatabase();
+    Cursor cursor = database.query(
+            SqlContract.FeedDays.TABLE_NAME,
+            SqlContract.getColumnsDay(),
+            null,
+            null,
+            null,
+            null,
+            SqlContract.FeedDays.sortOrder
+    );
+    if(cursor.getCount() < 1)
+    {
+        throw new utilityDatabaseError("No Days found");
+    }
+    cursor.moveToFirst();
+    while (!cursor.isAfterLast())
+    {
+        Days.add(new Day(cursor));
+        cursor.moveToNext();
+    }
+     return Days;
+    }
+
+    public static ArrayList<Day> getDaysWithTasks(Context context)
+    {
+        Log.d(context.getClass().getSimpleName(), "Getting days with tasks");
+        ArrayList<RecyclerHeader> headerList = new ArrayList<>();
+
+        ArrayList<Day> dayList = new ArrayList<>();
+
+        DbDayHelper dayHelper = new DbDayHelper(context);
+
+        SQLiteDatabase dayDatabase = dayHelper.getReadableDatabase();
+
+        String sortOrder = SqlContract.FeedDays.COLUMN_YEAR + " ASC," + SqlContract.FeedDays.COLUMN_MONTH + " ASC," + SqlContract.FeedDays.COLUMN_DAY + " ASC";
+
+        Cursor c = dayDatabase.query(
+                SqlContract.FeedDays.TABLE_NAME,
+                SqlContract.getColumnsDay(),
+                null,
+                null,
+                null,
+                null,
+                sortOrder
+        );
+
+        Log.d(context.getClass().getSimpleName(), "Days found:" + c.getCount());
+        c.moveToFirst();
+        while (!c.isAfterLast())
+        {
+            Log.e(TAG, "Cursor at: " + c.getPosition());
+            Log.e(TAG, "ID: " + c.getInt(c.getColumnIndexOrThrow(SqlContract.FeedDays._ID)));
+            dayList.add(new Day(
+                    c.getInt(c.getColumnIndexOrThrow(SqlContract.FeedDays.COLUMN_DAY)),
+                    c.getInt(c.getColumnIndex(SqlContract.FeedDays.COLUMN_MONTH)),
+                    c.getInt(c.getColumnIndexOrThrow(SqlContract.FeedDays.COLUMN_YEAR)),
+                    context,
+                    c.getInt(c.getColumnIndexOrThrow(SqlContract.FeedDays._ID))
+            ));
+            c.moveToNext();
+        }
+        dayDatabase.close();
+        c.close();
+        return dayList;
+    }
+
+    public static ArrayList<RecyclerHeader> getHeaders(Context context)
+    {
+        ArrayList<RecyclerHeader> headerList = new ArrayList<>();
+        ArrayList<Day> dayList = getDaysWithTasks(context);
+        for(Day dayInList : dayList)
+        {
+            headerList.add(new RecyclerHeader(Utilities.MonthDayYearsdf.format(dayInList.getDate().getTime()),dayInList.getTasks(context)));
+        }
+        return headerList;
+    }
+
+    public static void makeTask(String title, String description, int color, int day, int month, int year, int length, Context context, int urgency, int isComplete)
+    {
+        int dayID = getOrMakeDay(day, month, year, context);
+        Log.d(TAG, "Using " + dayID  + " for dayId");
+        DbTaskHelper helper = new DbTaskHelper(context);
+        SQLiteDatabase db = helper.getWritableDatabase();
+        ContentValues newTask = new ContentValues();
+        newTask.put(SqlContract.FeedTasks.COLUMN_TASK_NAME, title);
+        newTask.put(SqlContract.FeedTasks.COLUMN_DESCRIPTION, description);
+        newTask.put(SqlContract.FeedTasks.COLUMN_COLOR, color);
+        newTask.put(SqlContract.FeedTasks.COLUMN_DAY, day);
+        newTask.put(SqlContract.FeedTasks.COLUMN_MONTH, month);
+        newTask.put(SqlContract.FeedTasks.COLUMN_YEAR, year);
+        newTask.put(SqlContract.FeedTasks.COLUMN_URGANCY, urgency);
+        newTask.put(SqlContract.FeedTasks.COLUMN_IS_COMPLETE, isComplete);
+        newTask.put(SqlContract.FeedTasks.COLUMN_DAYID, dayID);
+        newTask.put(SqlContract.FeedTasks.COLUMN_LENGTH, length);
+        try {
+            db.insertOrThrow(SqlContract.FeedTasks.TABLE_NAME, null, newTask);
+        }catch (SQLException e)
+        {
+            Toast.makeText(context, "Failed to make task. Reason: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Log.e(TAG, "Failed to make task. Reason: " + e.getMessage());
+        }
+        db.close();
+    }
+
+    private static int getOrMakeDay(int day, int month, int year, Context context)
+    {
+        Log.d(context.getClass().getSimpleName(), "Getting or making day");
+        DbDayHelper helper = new DbDayHelper(context);
+        SQLiteDatabase db = helper.getReadableDatabase();
+        String daySelection = SqlContract.FeedDays.COLUMN_DAY + " = ? AND " + SqlContract.FeedDays.COLUMN_MONTH + " = ? AND " + SqlContract.FeedDays.COLUMN_YEAR + " = ?";
+        String[] selectionArgs = {String.valueOf(day), String.valueOf(month), String.valueOf(year)};
+
+        Cursor cursor = db.query(
+                SqlContract.FeedDays.TABLE_NAME,
+                SqlContract.getColumnsDay(),
+                daySelection,
+                selectionArgs,
+                null,
+                null,
+                SqlContract.FeedDays.sortOrder
+        );
+        cursor.moveToFirst();
+        Log.d(context.getClass().getSimpleName(), "Found day: " + cursor.getCount());
+        if(cursor.getCount() < 1)
+        {
+            Log.d(TAG, "No day found, creating new one");
+            return makeDay(day, month, year, context);
+        }
+        int ID = cursor.getInt(cursor.getColumnIndexOrThrow(SqlContract.FeedDays._ID));
+        db.close();
+        Log.d(TAG, "Day found, returning " + ID);
+        return ID;
+    }
+
+    private static int makeDay(int day, int month, int year, Context context)
+    {
+        DbDayHelper helper = new DbDayHelper(context);
+        SQLiteDatabase db = helper.getWritableDatabase();
+        ContentValues newDay = new ContentValues();
+        newDay.put(SqlContract.FeedDays.COLUMN_DAY, day);
+        newDay.put(SqlContract.FeedDays.COLUMN_MONTH, month);
+        newDay.put(SqlContract.FeedDays.COLUMN_YEAR, year);
+        long ID = db.insertOrThrow(SqlContract.FeedDays.TABLE_NAME, null, newDay);
+        Log.d(TAG, "Made day with id " + ID);
+        Log.e(TAG, "Specs: Day: " +day + " Month: " + month + " Year: " + year);
+        db.close();
+        return (int) ID;
+    }
+
+    public static int parseLength(String s)
+    {
+        char[] input = s.toCharArray();
+
+        int i = 0;
+        while(input[i] != ':' && i < s.length())
+        {
+            i++;
+        }
+
+        if(i == s.length())
+        {
+            if(s.charAt(0) == ':')
+            {
+                return Integer.valueOf(s.substring(1,s.length()));
+            }
+            else
+            {
+                return Integer.valueOf(s);
+            }
 
         }
-        return calendars;
+        int hours = Integer.valueOf(s.substring(0,i));
+        int minutes = Integer.valueOf(s.substring(i+1,s.length()));
+        return minutes + (hours * 60);
 
     }
 
-    private static Calendar makeCalendar(long aLong) {
-        Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(aLong);
-        return c;
+    public static void printAllTasks(Context c) throws utilityDatabaseError {
+        ArrayList<Task> tasks = getAllTasks(c);
+        for(Task task : tasks)
+        {
+            task.printInfo();
+        }
+    }
+    public static void printAllDays(Context c) throws utilityDatabaseError {
+        ArrayList<Day> Days = getAllDays(c);
+        for(Day d : Days)
+        {
+            d.printInfo();
+        }
+    }
+
+    public static Task getNextTask(Activity activity)
+    {
+        DbTaskHelper helper = new DbTaskHelper(activity);
+        SQLiteDatabase db = helper.getReadableDatabase();
+
+        Cursor c = db.query(
+                SqlContract.FeedTasks.TABLE_NAME,
+                SqlContract.getColumnsTask(),
+                null,
+                null,
+                null,
+                null,
+                SqlContract.FeedTasks.COLUMN_YEAR + " ASC," + SqlContract.FeedTasks.COLUMN_MONTH + " ASC," + SqlContract.FeedTasks.COLUMN_DAY + " ASC",
+                "1"
+
+        );
+        c.moveToFirst();
+        if(c.getCount() == 0)
+        {
+            return null;
+        }
+        return new Task(c);
+
+
+    }
+
+    public static class utilityDatabaseError extends Throwable {
+        public utilityDatabaseError(String message) {
+            super(message);
+        }
     }
 }
 
