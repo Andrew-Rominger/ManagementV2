@@ -12,7 +12,6 @@ import java.util.ArrayList;
 
 public class SqlContract
 {
-    public ArrayList<String> list = new ArrayList<>();
 
     private SqlContract()
     {
@@ -26,11 +25,12 @@ public class SqlContract
         public static final String COLUMN_COLOR = "color";
         public static final String COLUMN_IS_COMPLETE = "isComplete";
         public static final String COLUMN_DESCRIPTION = "description";
-        public  static final String COLUMN_URGANCY = "urgancy";
+        public static final String COLUMN_URGANCY = "urgancy";
         public static final String COLUMN_DAY = "day";
         public static final String COLUMN_MONTH = "month";
         public static final String COLUMN_YEAR = "year";
         public static final String COLUMN_LENGTH = "length";
+        public static final String COLUMN_DAYID = "dayid";
 
 
         //Urgency Levels
@@ -43,14 +43,18 @@ public class SqlContract
         public static final int URGANCY_MED_COLOR = R.color.md_orange_100;
         public static final int URGANCY_HIGH_COLOR = R.color.md_red_a200;
 
+        public static final String sortOrder = COLUMN_YEAR + " ASC," + COLUMN_MONTH + " ASC," +COLUMN_DAY + " ASC";
+
     }
 
     public class FeedDays implements BaseColumns
     {
-        static final String TABLE_NAME = "daysWithTasks";
-        static final String COLUMN_DAY = "day";
-        static final String COLUMN_MONTH = "month";
-        static final String COLUMN_YEAR = "year";
+        public static final String TABLE_NAME = "daysWithTasks";
+        public static final String COLUMN_DAY = "day";
+        public static final String COLUMN_MONTH = "month";
+        public static final String COLUMN_YEAR = "year";
+
+        public static final String sortOrder = COLUMN_YEAR + " ASC," + COLUMN_MONTH + " ASC," +COLUMN_DAY + " ASC";
 
     }
     public static String[] getColumnsTask()
@@ -65,7 +69,8 @@ public class SqlContract
                 FeedTasks.COLUMN_DAY,
                 FeedTasks.COLUMN_MONTH,
                 FeedTasks.COLUMN_YEAR,
-                FeedTasks.COLUMN_LENGTH
+                FeedTasks.COLUMN_LENGTH,
+                FeedTasks.COLUMN_DAYID
         };
         return list;
     }
@@ -76,7 +81,7 @@ public class SqlContract
                 FeedDays._ID,
                 FeedDays.COLUMN_DAY,
                 FeedDays.COLUMN_MONTH,
-                FeedDays.COLUMN_YEAR
+                FeedDays.COLUMN_YEAR,
         };
         return list;
     }

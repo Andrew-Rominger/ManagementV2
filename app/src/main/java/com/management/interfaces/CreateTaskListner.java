@@ -8,14 +8,9 @@ import java.util.ArrayList;
  * Created by Andrew on 2/13/2017.
  */
 
-public class CreateTaskListner
+public interface CreateTaskListner
 {
-    static ArrayList<Activity>  subscribers = new ArrayList<>();
 
-    public static void Subscribe(Activity a)
-    {
-        subscribers.add(a);
-    }
-
+     void recieveBroadcast();
 
 }
