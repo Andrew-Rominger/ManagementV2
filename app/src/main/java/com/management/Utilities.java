@@ -37,6 +37,7 @@ public class Utilities
     public static SimpleDateFormat monthAndYear = new SimpleDateFormat("MMM, yyyy");
     public static SimpleDateFormat fullDateWithTime = new SimpleDateFormat("MMM d, yyyy @ h:mm aa");
     public static SimpleDateFormat justTime = new SimpleDateFormat("h:mm aa");
+    public static SimpleDateFormat justHour = new SimpleDateFormat("h aa");
     public static int[] colorArray = {
             R.color.md_red_500,
             R.color.md_pink_500,
@@ -378,6 +379,19 @@ public class Utilities
 
 
     }
+
+    public static ArrayList<String> getHours()
+    {
+        ArrayList<String> h = new ArrayList<>();
+        for(int i = 0; i < 24; i++)
+        {
+            Calendar c = Calendar.getInstance();
+            c.set(Calendar.HOUR,i);
+            h.add(justHour.format(c.getTime()));
+        }
+        return h;
+    }
+
 
     public static class utilityDatabaseError extends Throwable {
         public utilityDatabaseError(String message) {
