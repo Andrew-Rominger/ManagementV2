@@ -25,13 +25,13 @@ import java.util.ArrayList;
  * Created by Andre on 2/11/2017.
  */
 
-public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.taskViewHolder> {
-    private static final String TAG = TaskListAdapter.class.getSimpleName();
+public class taskListAdapter extends RecyclerView.Adapter<taskListAdapter.taskViewHolder> {
+    private static final String TAG = taskListAdapter.class.getSimpleName();
     LayoutInflater inflater;
     Context context;
     ArrayList<Task> taskList;
     RecyclerHeader header;
-    public TaskListAdapter(Context context, RecyclerHeader header)
+    public taskListAdapter(Context context, RecyclerHeader header)
     {
         this.context = context;
         this.header = header;
@@ -40,13 +40,13 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.taskVi
     }
 
     @Override
-    public TaskListAdapter.taskViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    public taskListAdapter.taskViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        return new TaskListAdapter.taskViewHolder(inflater.inflate(R.layout.taskinlist, parent, false));
+        return new taskListAdapter.taskViewHolder(inflater.inflate(R.layout.taskinlist, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(TaskListAdapter.taskViewHolder holder, int position)
+    public void onBindViewHolder(taskListAdapter.taskViewHolder holder, int position)
     {
         Log.i(TAG, "Binding data for Task " + position);
         holder.setData(taskList.get(position));

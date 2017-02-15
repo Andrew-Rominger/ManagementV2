@@ -1,7 +1,6 @@
 package com.management.Fragments;
 
 import android.app.Fragment;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -11,8 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.management.Adapter.HeaderAdapter;
-import com.management.BaseClasses.DataBaseClasses.Day;
+import com.management.Adapter.headerAdapter;
 import com.management.BaseClasses.DataBaseClasses.Task;
 import com.management.BaseClasses.RecyclerHeader;
 import com.management.R;
@@ -31,7 +29,7 @@ public class TaskFragment extends Fragment implements CreateTaskListner
     private static final String TAG = TaskFragment.class.getSimpleName();
 
     RecyclerView mainList;
-    HeaderAdapter adapter;
+    headerAdapter adapter;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -51,7 +49,7 @@ public class TaskFragment extends Fragment implements CreateTaskListner
     {
         ArrayList<RecyclerHeader> list;
         list = Utilities.getHeaders(view.getContext());
-        adapter = new HeaderAdapter(list, view.getContext());
+        adapter = new headerAdapter(list, view.getContext());
         Log.e(TAG, "Found " + list.size() + " headers");
         for(RecyclerHeader h : list)
         {

@@ -74,6 +74,7 @@ public class Utilities
         int dayOfWeek = c.get(Calendar.DAY_OF_WEEK) -1;
         //Log.i("Day retured", String.valueOf(dayOfWeek));
         c.add(Calendar.DAY_OF_MONTH, -dayOfWeek);
+        //Either this line or the one above crashes app :'(
         //Log.i("First Day", String.valueOf(c.get(Calendar.DAY_OF_MONTH)));
         for(int i = 0;i<42;i++)
         {

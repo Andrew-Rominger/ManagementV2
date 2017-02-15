@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextClock;
 import android.widget.TextView;
 
 import com.management.BaseClasses.RecyclerHeader;
@@ -20,13 +19,13 @@ import java.util.ArrayList;
  * Created by wesleybanghart on 2/11/17.
  */
 
-public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.headerViewHolder>
+public class headerAdapter extends RecyclerView.Adapter<headerAdapter.headerViewHolder>
 {
-    private static final String TAG = HeaderAdapter.class.getSimpleName();
+    private static final String TAG = headerAdapter.class.getSimpleName();
     LayoutInflater inflater;
     Context c;
     ArrayList<RecyclerHeader> headers = new ArrayList<>();
-    public HeaderAdapter(ArrayList<RecyclerHeader> data, Context c)
+    public headerAdapter(ArrayList<RecyclerHeader> data, Context c)
     {
         this.c = c;
         this.headers = data;
@@ -34,7 +33,7 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.headerView
     }
 
     @Override
-    public HeaderAdapter.headerViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    public headerAdapter.headerViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
         return new headerViewHolder(inflater.inflate(R.layout.sort_item_layout, parent, false),c);
     }
@@ -75,7 +74,7 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.headerView
 
         public void setData(RecyclerHeader recyclerHeader)
         {
-            this.taskList.setAdapter(new TaskListAdapter(c, recyclerHeader));
+            this.taskList.setAdapter(new taskListAdapter(c, recyclerHeader));
             header.setText(recyclerHeader.getTitle());
             LinearLayoutManager manager = new LinearLayoutManager(context){
                 @Override

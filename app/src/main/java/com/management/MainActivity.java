@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements com.management.in
         setSupportActionBar(toolbar);
 
         ActionBar bar = getSupportActionBar();
-        Log.d(TAG, String.valueOf(Utilities.parseLength(":45")));
+        //Log.d(TAG, String.valueOf(Utilities.parseLength(":45")));
         fm = getFragmentManager();
         transaction = fm.beginTransaction();
         transaction.replace(R.id.contentHolder, new HomeFragment(), "homeFragment");
