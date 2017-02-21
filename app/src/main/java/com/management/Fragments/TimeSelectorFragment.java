@@ -22,6 +22,7 @@ import com.management.interfaces.IcalendarViewScroll;
 import com.management.interfaces.ItimeSelector;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 /**
  * Created by Andre on 2/10/2017.
@@ -59,10 +60,14 @@ public class TimeSelectorFragment extends Fragment
         super.onAttach(context);
         timeSelector = (ItimeSelector) context;
         scroll = (IcalendarViewScroll) context;
+        if(selectedTime != null)
+        {
+            timeSelector.passTime(selectedTime);
+        }
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState)
+    public void onViewCreated(View view, final Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
         timeSelecterView = (TimeSelecterView) view.findViewById(R.id.timeSelectorFragmentViews);
@@ -78,4 +83,5 @@ public class TimeSelectorFragment extends Fragment
             }
         });
     }
+
 }

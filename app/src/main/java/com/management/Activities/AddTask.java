@@ -313,6 +313,7 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
         FragmentManager fragmentManger;
         private int index;
 
+        //This is not used anywhere, dont know why we need it.
         int getIndex() {
             return index;
         }
@@ -330,6 +331,8 @@ public class AddTask extends AppCompatActivity implements CalendarFragmentDataPa
                 close();
                 return;
             }
+            //Don't know why this line of code is here
+            //Doesn't appear to do anything
             this.index = index2;
             if(fragment instanceof calendarFragment)
             {

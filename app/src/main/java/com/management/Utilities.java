@@ -159,6 +159,7 @@ public class Utilities
         }
         return List;
     }
+
     public static ArrayList<Day> getAllDays(Context context) throws utilityDatabaseError {
     ArrayList<Day> Days = new ArrayList<>();
     DbDayHelper helper = new DbDayHelper(context);
@@ -346,6 +347,7 @@ public class Utilities
             task.printInfo();
         }
     }
+
     public static void printAllDays(Context c) throws utilityDatabaseError {
         ArrayList<Day> Days = getAllDays(c);
         for(Day d : Days)

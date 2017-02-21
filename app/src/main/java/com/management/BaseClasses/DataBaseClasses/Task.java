@@ -101,6 +101,7 @@ public class Task
         Log.w(TAG, "-----------------------------------------------------------------------------");
     }
 
+    //Getter and Setter methods
     public int getDay() {
         return day;
     }

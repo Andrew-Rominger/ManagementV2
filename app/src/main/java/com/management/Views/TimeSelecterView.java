@@ -1,6 +1,9 @@
 package com.management.Views;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,9 +19,12 @@ import com.management.Listners.timeSelectorListner;
 
 import com.management.R;
 import com.management.Utilities;
+import com.management.Fragments.TimeSelectorFragment;
+import com.management.interfaces.ItimeSelector;
 
 import java.sql.Time;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 /**
  * Created by Andre on 2/10/2017.
@@ -42,20 +48,29 @@ public class TimeSelecterView extends LinearLayout
 
     timeSelectorListner listner;
 
-    public TimeSelecterView(Context context, AttributeSet attrs)
+
+    public TimeSelecterView(Context context, AttributeSet attrs, Calendar c)
     {
         super(context, attrs);
         listner = new timeSelectorListner();
+        if(c == null)
+        {
+            selectedTime = Calendar.getInstance();
+        }
+        else
+        {
+            listner.timePass(c);
+            selectedTime = c;
+        }
+
+        hour = selectedTime.get(Calendar.HOUR);
+        minute = selectedTime.get(Calendar.MINUTE);
         setupView();
         updateCalendars();
     }
 
     void setupView()
     {
-        selectedTime = Calendar.getInstance();
-        hour = selectedTime.get(Calendar.HOUR);
-        minute = selectedTime.get(Calendar.MINUTE);
-
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.timeselecterlayout, this);
 
@@ -68,10 +83,12 @@ public class TimeSelecterView extends LinearLayout
 
         okButton = (Button) findViewById(R.id.timeFragmentButton);
 
+        shownTime.setText(hour + ":" + minute);
 
         timeBar.setMax(11);
 
         timeBar.setProgress(selectedTime.get(Calendar.MINUTE) / 5);
+
 
         timeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
         {
@@ -94,36 +111,20 @@ public class TimeSelecterView extends LinearLayout
 
             }
         });
+        //Adds an hour
         plusTime.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v)
             {
-                if(hour == 23)
-                {
-                    hour = 0;
-                }
-                else
-                {
-                    hour++;
-                }
-                selectedTime.set(Calendar.HOUR_OF_DAY, hour);
-                updateCalendars();
+                addTime();
             }
         });
+        //Subtracts an hour
         minusTime.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v)
             {
-                if(hour == 0)
-                {
-                    hour = 23;
-                }
-                else
-                {
-                    hour--;
-                }
-                selectedTime.set(Calendar.HOUR_OF_DAY, hour);
-                updateCalendars();
+                subtractTime();
             }
         });
 
@@ -136,6 +137,19 @@ public class TimeSelecterView extends LinearLayout
         });
 
     }
+    private void addTime()
+    {
+        hour ++;
+        selectedTime.set(Calendar.HOUR_OF_DAY, hour);
+        updateCalendars();
+    }
+
+    private void subtractTime()
+    {
+        hour --;
+        selectedTime.set(Calendar.HOUR_OF_DAY, hour);
+        updateCalendars();
+    }
 
     public void setOnOkListner(timeSelectorListner listner)
     {
@@ -146,4 +160,5 @@ public class TimeSelecterView extends LinearLayout
     {
         shownTime.setText(Utilities.justTime.format(selectedTime.getTime()));
     }
+
 }
